@@ -50,6 +50,7 @@ if errorlevel 1 goto pipeline_failed
 echo.
 echo Setup and pipeline completed successfully.
 echo Database: _local\output\retail_pipeline.duckdb
+echo Next, open step_01_data and follow the numbered folders through step_05_explore.
 echo To browse the tables, double-click OPEN_DATA.bat after this run.
 echo.
 goto finish

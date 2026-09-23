@@ -3,9 +3,9 @@ from pathlib import Path
 import duckdb
 import pandas as pd
 
-from src.bronze import load_bronze_tables
+from step_02_bronze.bronze import load_bronze_tables
 from src.database import prepare_database
-from src.source_validation import ValidatedSource
+from step_02_bronze.source_validation import ValidatedSource
 
 
 def test_load_bronze_tables_replaces_data_without_duplicates(tmp_path: Path) -> None:

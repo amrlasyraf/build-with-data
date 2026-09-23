@@ -15,7 +15,7 @@ def build_gold(database_path: Path) -> int:
         connection.execute("BEGIN TRANSACTION")
         try:
             connection.execute("CREATE SCHEMA IF NOT EXISTS gold")
-            connection.execute((PROJECT_ROOT / "sql/02_gold.sql").read_text(encoding="utf-8"))
+            connection.execute((PROJECT_ROOT / "step_04_gold/gold.sql").read_text(encoding="utf-8"))
             gold_count = connection.execute("SELECT count(*) FROM gold.monthly_sales_summary").fetchone()[0]
             if not gold_count:
                 raise ValueError("The monthly sales summary contains no rows.")

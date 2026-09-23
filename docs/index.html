@@ -204,7 +204,7 @@
 
     .flow {
       display: grid;
-      grid-template-columns: repeat(6, minmax(140px, 1fr));
+      grid-template-columns: repeat(5, minmax(160px, 1fr));
       margin: 0;
       padding: 0;
       border: 1px solid var(--strong-line);
@@ -421,7 +421,7 @@
       }
 
       .phase + .phase { padding-left: 0; }
-      .flow { grid-template-columns: repeat(6, minmax(175px, 1fr)); }
+      .flow { grid-template-columns: repeat(5, minmax(175px, 1fr)); }
       .role-table { display: block; overflow-x: auto; }
     }
 
@@ -491,9 +491,9 @@
         <div class="section-heading">
           <h2>Follow the data</h2>
           <p class="section-intro">
-            Each stage has one job. The pipeline ends at Gold; the sample Power BI
-            report uses its export, while forecasting could extend it without
-            rebuilding business logic elsewhere.
+            The numbered folders in the repository follow this path. Complete
+            the local pipeline first; Power BI and forecasting are separate
+            extensions of the Gold output.
           </p>
         </div>
 
@@ -523,18 +523,14 @@
             <span class="step-state is-live">ready</span>
           </li>
           <li>
-            <span class="step-number">05 / ANALYZE</span>
-            <h3>Power BI</h3>
-            <p>Trends, mix, profit, and drill-downs.</p>
-            <span class="step-state is-live">available</span>
-          </li>
-          <li>
-            <span class="step-number">06 / PREDICT</span>
-            <h3>Forecast</h3>
-            <p>Compare a model with a simple baseline.</p>
-            <span class="step-state is-proposed">proposed</span>
+            <span class="step-number">05 / EXPLORE</span>
+            <h3>Query locally</h3>
+            <p>Open DuckDB and inspect the Bronze, Silver, and Gold tables.</p>
+            <span class="step-state is-live">ready</span>
           </li>
         </ol>
+
+        <p><a href="https://github.com/amrlasyraf/build-with-data#follow-the-numbered-folders">Open the numbered folder guide on GitHub</a>.</p>
 
         <div class="quality-line">
           <span><strong>Quality gate:</strong> 14 contract-based checks across Bronze, Silver, and Gold.</span>

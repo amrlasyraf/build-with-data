@@ -4,7 +4,7 @@ from pathlib import Path
 
 import duckdb
 
-from src.source_validation import ValidatedSource
+from step_02_bronze.source_validation import ValidatedSource
 
 
 def load_bronze_tables(

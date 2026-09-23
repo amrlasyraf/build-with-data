@@ -8,7 +8,7 @@ if not exist "_local\.venv\Scripts\python.exe" (
     pause
     exit /b 1
 )
-"_local\.venv\Scripts\python.exe" -m src.viewer
+"_local\.venv\Scripts\python.exe" -m step_05_explore.viewer
 if errorlevel 1 (
     pause
     exit /b 1

@@ -15,7 +15,7 @@ def build_silver(database_path: Path) -> int:
         connection.execute("BEGIN TRANSACTION")
         try:
             connection.execute("CREATE SCHEMA IF NOT EXISTS silver")
-            connection.execute((PROJECT_ROOT / "sql/01_silver.sql").read_text(encoding="utf-8"))
+            connection.execute((PROJECT_ROOT / "step_03_silver/silver.sql").read_text(encoding="utf-8"))
             source_count = connection.execute("SELECT count(*) FROM bronze.sales").fetchone()[0]
             silver_count = connection.execute("SELECT count(*) FROM silver.sales_enriched").fetchone()[0]
             missing_matches = connection.execute("""

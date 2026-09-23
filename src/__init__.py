@@ -1,1 +1,1 @@
-"""Build With Me #1 pipeline package."""
+"""Shared support used by the numbered pipeline steps."""

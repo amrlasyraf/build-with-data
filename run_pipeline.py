@@ -8,12 +8,12 @@ import logging
 
 import duckdb
 
-from src.bronze import load_bronze_tables
-from src.silver import build_silver
-from src.gold import build_gold
+from step_02_bronze.bronze import load_bronze_tables
+from step_03_silver.silver import build_silver
+from step_04_gold.gold import build_gold
 from src.database import prepare_database
 from src.settings import DATASET_DIR, DATABASE_PATH
-from src.source_validation import validate_sources
+from step_02_bronze.source_validation import validate_sources
 
 
 def main(argv: list[str] | None = None) -> int:

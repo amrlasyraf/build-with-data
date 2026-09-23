@@ -5,11 +5,11 @@ import duckdb
 import pandas as pd
 import pytest
 
-from src.bronze import load_bronze_tables
+from step_02_bronze.bronze import load_bronze_tables
 from src.database import prepare_database
-from src.source_validation import ValidatedSource
-from src.silver import build_silver
-from src.gold import build_gold
+from step_02_bronze.source_validation import ValidatedSource
+from step_03_silver.silver import build_silver
+from step_04_gold.gold import build_gold
 
 
 def test_transformations_calculate_and_preserve_outputs_on_failure(tmp_path):

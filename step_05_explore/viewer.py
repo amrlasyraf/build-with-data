@@ -28,7 +28,7 @@ def main() -> int:
             connection.execute("LOAD ui")
             connection.execute("CALL start_ui()")
             print("In the browser, expand retail to find bronze, silver, and gold.")
-            print("Queries are in the README under Explore your data.")
+            print("Queries are in README.md under Step 2: Open the Result.")
             print("Keep this window open while exploring.")
             print("Close this viewer BEFORE rerunning the pipeline.")
             try:

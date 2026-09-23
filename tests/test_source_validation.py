@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from src.source_validation import SourceValidationError, validate_sources
+from step_02_bronze.source_validation import SourceValidationError, validate_sources
 
 
 VALID_FILES = {

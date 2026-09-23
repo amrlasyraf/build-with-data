@@ -13,17 +13,23 @@ product category, and sales channel?** The [visual project guide](https://amrlas
 shows how the data engineering pipeline connects to the optional Power BI
 report and a possible later forecasting exercise.
 
-## Follow This Order
+## Follow the Numbered Folders
 
-1. **Run it:** download the project and double-click `START_HERE.bat`.
-2. **See the result:** open `OPEN_DATA.bat` and query the Gold table.
-3. **Understand the layers:** compare source, Bronze, Silver, and Gold.
-4. **Try a retry:** run only Silver or Gold to see the task boundaries.
-5. **Extend it:** try data-quality checks or the Power BI report.
+Run `START_HERE.bat` once, then open these folders in order. Each has a short
+README and the files for that step:
 
-You can stop after step 3. The add-ons are not required for the core project.
+| Step | Folder | What you learn |
+|---|---|---|
+| 01 | [Source data](step_01_data/README.md) | What the three input CSVs contain |
+| 02 | [Bronze](step_02_bronze/README.md) | How raw source values are checked and loaded |
+| 03 | [Silver](step_03_silver/README.md) | How sales are cleaned and joined |
+| 04 | [Gold](step_04_gold/README.md) | How the monthly summary is built |
+| 05 | [Explore](step_05_explore/README.md) | How to query the result in DuckDB |
 
-## 1. Download and Run
+You can stop after folder 05. `add_ons/`, `docs/`, `src/`, and `tests/` support
+the project but are not part of the first reading path.
+
+## Download and Run
 
 On Windows, you do not need Git or an existing Python setup to download the
 project:
@@ -52,7 +58,7 @@ counts. With the supplied CSVs, expect:
 not included when someone downloads the repository. Back up personal work in
 that folder before deleting it to start over.
 
-## 2. Open the Result
+## Explore the Result
 
 After the pipeline succeeds, double-click `OPEN_DATA.bat`. It opens the
 [DuckDB local UI](https://duckdb.org/docs/current/core_extensions/ui) in your
@@ -91,9 +97,9 @@ in the `OPEN_DATA.bat` window before rerunning the pipeline; closing only the
 browser tab does not release the database lock. If the browser does not open,
 visit `http://localhost:4213` while the viewer window is running.
 
-## 3. Trace the Data
+## Trace the Data
 
-The three source files are in `Dataset/`:
+The three source files are in `step_01_data/`:
 
 | File | What it contributes |
 |---|---|
@@ -136,14 +142,14 @@ To see how the stages are implemented, read in this order:
 | File | Role |
 |---|---|
 | `run_pipeline.py` | Runs all stages or selects one |
-| `src/bronze.py` | Loads validated CSV data |
-| `src/silver.py` + `sql/01_silver.sql` | Cleans values, joins tables, calculates measures |
-| `src/gold.py` + `sql/02_gold.sql` | Aggregates the monthly summary |
+| `step_02_bronze/source_validation.py` + `bronze.py` | Validates and loads CSV data |
+| `step_03_silver/silver.py` + `silver.sql` | Cleans values, joins tables, calculates measures |
+| `step_04_gold/gold.py` + `gold.sql` | Aggregates the monthly summary |
 
 Python manages execution and failures; SQL handles relational transformations.
 Column definitions and join rules are in [the data model](docs/DATA_MODEL.md).
 
-## 4. Run or Retry One Stage
+## Retry One Stage
 
 Run these commands from the extracted project folder. `START_HERE.bat` creates
 the Python environment used here:
@@ -168,7 +174,7 @@ This is a full-refresh pipeline. Run one writer at a time. If you change source
 data or rebuild an upstream stage, rerun downstream stages in order; they do
 not update themselves automatically.
 
-## 5. Try the Optional Add-ons
+## Optional Add-ons
 
 These are separate from the core pipeline. Their full instructions are in
 [Optional Add-ons](docs/ADD_ONS.md).
@@ -227,7 +233,7 @@ published by Maven Analytics. Maven lists Microsoft as the source and the
 licence as Public Domain. The source field reference is
 `docs/Data_Dictionary.csv`.
 
-`Dataset/optional/Customers.csv` and `Exchange_Rates.csv` are included but not
+`step_01_data/optional/Customers.csv` and `Exchange_Rates.csv` are included but not
 used by the core pipeline. Prices and costs in `Products.csv` are already in
 USD; this project does not claim to convert transaction currencies. A
 PostgreSQL version is a possible future extension, not an implemented feature.
@@ -238,7 +244,7 @@ Airflow, Spark, Kafka, and cloud deployment are outside Project #1.
 | Problem | What to do |
 |---|---|
 | Python was not found | Install Python 3.11 or newer, enable **Add Python to PATH**, then reopen `START_HERE.bat`. |
-| A source CSV was not found | Extract the whole ZIP and keep `START_HERE.bat` alongside the `Dataset` folder. |
+| A source CSV was not found | Extract the whole ZIP and keep `START_HERE.bat` alongside `step_01_data/`. |
 | Package installation failed | Check the internet connection and run `START_HERE.bat` again. |
 | The database is locked | Press Enter in the `OPEN_DATA.bat` window and close other apps using the DuckDB file. |
 | Silver or Gold is missing its input | Run the upstream stage first, then retry the failed stage. |
