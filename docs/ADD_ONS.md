@@ -4,7 +4,7 @@ The core project ends with a working local DuckDB pipeline and a queryable Gold
 table. These add-ons are optional. Start with the core pipeline; return here
 when you want to explore data quality or Power BI.
 
-## Add-on 1 — Data Quality
+## 1. Check Data Quality
 
 **Status: implemented.** Run it after the core pipeline:
 
@@ -40,30 +40,7 @@ count, failure rate, and rule description. `quality.latest_check_results`
 exposes the newest run. Any failed rule produces exit code 1. The add-on uses
 plain SQL and Python and adds no data-quality framework dependency.
 
-## Add-on 2 — PostgreSQL
-
-**Status: not implemented.** The repository does not include a PostgreSQL
-pipeline or setup guide. This is a possible follow-up project, not a step needed
-for the DuckDB pipeline or Power BI report.
-
-### Purpose
-
-Introduce the difference between an embedded database and a client/server
-database after the learner already understands the pipeline itself.
-
-### Learning goals
-
-- install or run PostgreSQL locally
-- understand host, port, database, username, and password
-- keep credentials in environment variables
-- recreate the Bronze, Silver, and Gold schemas
-- load the same three sources and reproduce the same Gold result
-- inspect tables with pgAdmin or DBeaver
-
-These are topics for a future implementation; the commands in this repository
-continue to use DuckDB.
-
-## Add-on 3 — Power BI
+## 2. Open the Power BI Report
 
 **Status: Gold CSV export and sample Power BI report available.** Create the
 file after running the core pipeline:
@@ -99,7 +76,13 @@ not included in the repository.
 The Power BI report uses the CSV export. No PostgreSQL connection is needed or
 included in this version.
 
-## Later Projects, Not Add-ons
+## Future Idea: PostgreSQL
+
+**Not implemented.** A later version could reproduce the Bronze, Silver, and
+Gold tables in PostgreSQL to show how a client/server database differs from
+DuckDB. This repository does not contain a PostgreSQL pipeline or setup guide.
+
+## Outside This Project
 
 Spark, Kafka, workflow orchestration, and cloud deployment are outside this
 local project. They introduce infrastructure beyond the pipeline covered here.

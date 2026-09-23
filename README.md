@@ -1,129 +1,118 @@
 # Build With Me #1 — Local Retail Data Pipeline
 
-Build a production-style batch pipeline on your own computer:
+Follow one retail dataset from CSV files to a sales report. The core project
+runs on your computer with Python, pandas, DuckDB, and SQL. It needs no API key,
+cloud account, database server, or Docker.
 
 ```text
-CSV files → Bronze → Silver → Gold → SQL analysis
+Sales + Products + Stores CSVs → Bronze → Silver → Gold → analysis
 ```
 
-The pipeline uses Python and pandas for source validation, DuckDB for local
-storage, and SQL for transformations. It runs without a cloud account, database
-server, Docker, or API key.
+The question: **How do sales and estimated gross profit change by month,
+product category, and sales channel?** The [visual project guide](https://amrlasyraf.github.io/build-with-data/)
+shows how the data engineering pipeline connects to the optional Power BI
+report and a possible later forecasting exercise.
 
-View the [visual project guide](https://amrlasyraf.github.io/build-with-data/)
-for the complete Data Engineering → Data Analytics → Data Science roadmap.
+## Follow This Order
 
-The business question is:
+1. **Run it:** download the project and double-click `START_HERE.bat`.
+2. **See the result:** open `OPEN_DATA.bat` and query the Gold table.
+3. **Understand the layers:** compare source, Bronze, Silver, and Gold.
+4. **Try a retry:** run only Silver or Gold to see the task boundaries.
+5. **Extend it:** try data-quality checks or the Power BI report.
 
-> How do sales and estimated gross profit change by month, product category,
-> and sales channel?
+You can stop after step 3. The add-ons are not required for the core project.
 
-## Three Files to Know
+## 1. Download and Run
 
-If this is your first data pipeline, start with only these files:
+On Windows, you do not need Git or an existing Python setup to download the
+project:
 
-| File | When to use it |
-|---|---|
-| `START_HERE.bat` | Set up the project and run the complete pipeline |
-| `OPEN_DATA.bat` | Open the finished Bronze, Silver, and Gold tables |
-| `README.md` | Follow the walkthrough and copy the example queries |
+1. On [GitHub](https://github.com/amrlasyraf/build-with-data), select
+   **Code → Download ZIP**.
+2. Extract the ZIP. Open the extracted folder, not the ZIP itself.
+3. Double-click `START_HERE.bat`.
 
-The other folders contain the pipeline implementation, tests, documentation,
-and optional advanced work. You do not need to understand all of them before
-running the project.
+The launcher checks for Python 3.11 or newer. If Python is missing, follow its
+instructions to install Python from [python.org](https://www.python.org/downloads/),
+enable **Add Python to PATH**, then reopen the launcher. It creates a virtual
+environment in `_local/.venv`, installs the packages, and runs Bronze, Silver,
+and Gold. The first run needs internet access for package installation.
 
-## Start Here on Windows
+A successful run creates `_local/output/retail_pipeline.duckdb` and prints row
+counts. With the supplied CSVs, expect:
 
-You do not need Git or previous GitHub experience.
-
-1. On the GitHub page, select the green **Code** button.
-2. Select **Download ZIP**.
-3. Open Downloads, right-click the ZIP, and select **Extract All**.
-4. Open the extracted project folder. Do not run it from inside the ZIP.
-5. Double-click **START_HERE.bat**.
-
-The launcher checks for Python 3.11 or newer, creates a private environment
-under `_local`, installs the project packages, and runs the complete pipeline.
-The first run needs an internet connection to install packages.
-
-If Python is missing, the launcher explains how to install it from
-[python.org](https://www.python.org/downloads/). Enable **Add Python to PATH**
-during installation, close the launcher window, and run it again.
-
-A successful run ends with committed row counts for all three layers and creates:
-
-```text
-_local\output\retail_pipeline.duckdb
-```
-
-`_local` contains machine-specific files such as the Python environment and
-generated databases. Git ignores the whole folder, so none of it is published.
-To start over, remove the generated files in `_local` and rerun the launcher.
-Back up any personal work saved there before deleting the folder.
-
-With the supplied data, expect:
-
-| Output | Rows |
+| Table | Rows |
 |---|---:|
 | `bronze.sales` | 62,884 |
 | `silver.sales_enriched` | 62,884 |
 | `gold.monthly_sales_summary` | 979 |
 
-## What the Pipeline Does
+`_local` holds generated files and your machine's setup. Git ignores it; it is
+not included when someone downloads the repository. Back up personal work in
+that folder before deleting it to start over.
 
-```text
-Sales.csv ─────┐
-Products.csv ──┼─→ pandas validation → bronze tables
-Stores.csv ────┘                           │
-                                            ▼
-                               silver.sales_enriched
-                               clean types + two joins
-                                            │
-                                            ▼
-                            gold.monthly_sales_summary
-                         month + category + sales channel
-```
+## 2. Open the Result
 
-Each layer is an independent task with its own transaction:
-
-| Layer | Responsibility | Main output |
-|---|---|---|
-| Bronze | Load validated source files without hiding source formatting | Three source-shaped tables |
-| Silver | Type, clean, join, and calculate line-level measures | `silver.sales_enriched` |
-| Gold | Aggregate Silver for the business question | `gold.monthly_sales_summary` |
-
-Bronze keeps source values as text, including date strings and dollar signs.
-Silver converts dates and numbers, joins products and stores, labels store key
-`0` as `Online`, and calculates:
-
-```text
-gross_sales_usd = quantity × unit_price_usd
-estimated_gross_profit_usd = quantity × (unit_price_usd - unit_cost_usd)
-```
-
-Gold groups those sales lines by month, product category, and sales channel.
-The profit measure is an estimate based on standard product price and cost. The
-source has no transaction-level discounts, taxes, refunds, or accounting costs.
-
-## Explore the Result
-
-After the pipeline succeeds, double-click **OPEN_DATA.bat**. It opens the
+After the pipeline succeeds, double-click `OPEN_DATA.bat`. It opens the
 [DuckDB local UI](https://duckdb.org/docs/current/core_extensions/ui) in your
 browser. The first viewer run needs internet access for the UI extension and
-browser assets. Queries run locally and no account is required.
+browser assets; queries then run locally without an account.
 
-In the browser:
-
-1. Expand the **retail** database to see `bronze`, `silver`, and `gold`.
-2. Select **Create Notebook** beside Notebooks.
-3. Name it, select **Add Cell**, and paste one query below.
-4. Select **Run** on the SQL cell.
-
-The UI may restore notebooks from earlier sessions. Create a new notebook so
-you do not accidentally run an unrelated saved query.
+Expand the **retail** database to see `bronze`, `silver`, and `gold`. Select
+**Create Notebook**, add a SQL cell, and try these queries one at a time:
 
 ```sql
--- Compare source-formatted prices with their cleaned Silver values.
+-- Start with the answer table.
+SELECT *
+FROM retail.gold.monthly_sales_summary
+ORDER BY sales_month, product_category, sales_channel
+LIMIT 20;
+
+-- Compare the three stages by row count.
+SELECT 'Bronze sales' AS layer, count(*) AS rows FROM retail.bronze.sales
+UNION ALL
+SELECT 'Silver sales', count(*) FROM retail.silver.sales_enriched
+UNION ALL
+SELECT 'Gold summary', count(*) FROM retail.gold.monthly_sales_summary;
+
+-- Summarize the result by channel.
+SELECT sales_channel,
+       sum(units_sold) AS units_sold,
+       sum(gross_sales_usd) AS gross_sales_usd,
+       sum(estimated_gross_profit_usd) AS estimated_gross_profit_usd
+FROM retail.gold.monthly_sales_summary
+GROUP BY sales_channel
+ORDER BY sales_channel;
+```
+
+The viewer keeps a read-only connection to the pipeline database. Press Enter
+in the `OPEN_DATA.bat` window before rerunning the pipeline; closing only the
+browser tab does not release the database lock. If the browser does not open,
+visit `http://localhost:4213` while the viewer window is running.
+
+## 3. Trace the Data
+
+The three source files are in `Dataset/`:
+
+| File | What it contributes |
+|---|---|
+| `Sales.csv` | Order lines, dates, product and store keys, quantities |
+| `Products.csv` | Product names, categories, standard USD prices and costs |
+| `Stores.csv` | Store locations; store key `0` represents online sales |
+
+The pipeline uses a local version of the Medallion Architecture. Bronze,
+Silver, and Gold are schemas inside one DuckDB file, not separate servers.
+
+| Layer | What to look for | Main table |
+|---|---|---|
+| Bronze | Source-shaped values, still stored as text | `bronze.sales`, `bronze.products`, `bronze.stores` |
+| Silver | Clean dates and numbers, join product and store details, calculate line-level measures | `silver.sales_enriched` |
+| Gold | Group lines by month, category, and channel | `gold.monthly_sales_summary` |
+
+Trace a product price through Bronze and Silver:
+
+```sql
 SELECT product_key, unit_price_usd, unit_cost_usd
 FROM retail.bronze.products
 WHERE product_key = '1';
@@ -134,48 +123,30 @@ FROM retail.silver.sales_enriched
 WHERE product_key = 1
 ORDER BY order_number, line_item
 LIMIT 10;
-
--- Inspect the analytics-ready result.
-SELECT *
-FROM retail.gold.monthly_sales_summary
-ORDER BY sales_month, product_category, sales_channel
-LIMIT 20;
-
--- Reconcile row counts between the layers.
-SELECT 'Bronze sales' AS layer, count(*) AS rows FROM retail.bronze.sales
-UNION ALL
-SELECT 'Silver sales', count(*) FROM retail.silver.sales_enriched
-UNION ALL
-SELECT 'Gold summary', count(*) FROM retail.gold.monthly_sales_summary;
-
--- Compare total results by sales channel.
-SELECT sales_channel,
-       sum(units_sold) AS units_sold,
-       sum(gross_sales_usd) AS gross_sales_usd,
-       sum(estimated_gross_profit_usd) AS estimated_gross_profit_usd
-FROM retail.gold.monthly_sales_summary
-GROUP BY sales_channel
-ORDER BY sales_channel;
 ```
 
-The viewer attaches the pipeline database as read-only and stores its own state
-in `_local/output/viewer.duckdb`. Press Enter in the viewer window before
-rerunning the pipeline. Closing only the browser tab does not release the
-database lock.
+Silver calculates `gross_sales_usd = quantity × unit_price_usd` and
+`estimated_gross_profit_usd = quantity × (unit_price_usd - unit_cost_usd)`.
+These are teaching metrics based on standard product price and cost. The source
+does not include transaction-level discounts, taxes, refunds, or final
+accounting costs, so the profit figure is an estimate.
 
-If the browser does not open automatically, visit `http://localhost:4213` while
-the viewer window is running.
+To see how the stages are implemented, read in this order:
 
-## Run and Retry Like an Orchestrator
+| File | Role |
+|---|---|
+| `run_pipeline.py` | Runs all stages or selects one |
+| `src/bronze.py` | Loads validated CSV data |
+| `src/silver.py` + `sql/01_silver.sql` | Cleans values, joins tables, calculates measures |
+| `src/gold.py` + `sql/02_gold.sql` | Aggregates the monthly summary |
 
-Running the command without an option executes Bronze → Silver → Gold and stops
-at the first failure:
+Python manages execution and failures; SQL handles relational transformations.
+Column definitions and join rules are in [the data model](docs/DATA_MODEL.md).
 
-```powershell
-_local\.venv\Scripts\python.exe run_pipeline.py
-```
+## 4. Run or Retry One Stage
 
-Every layer can also run independently:
+Run these commands from the extracted project folder. `START_HERE.bat` creates
+the Python environment used here:
 
 ```powershell
 _local\.venv\Scripts\python.exe run_pipeline.py --layer bronze
@@ -183,186 +154,91 @@ _local\.venv\Scripts\python.exe run_pipeline.py --layer silver
 _local\.venv\Scripts\python.exe run_pipeline.py --layer gold
 ```
 
-Silver requires committed Bronze tables. Gold requires committed Silver. A Gold
-retry does not read the CSVs or rebuild Bronze and Silver. If Gold fails, its
-previous committed table remains available while Silver stays unchanged.
-
-This is the dependency chain a future orchestrator could execute:
-
-```text
-bronze >> silver >> gold
-```
-
-The local project uses full refreshes. Run one pipeline writer at a time. After
-changing upstream data, rebuild the affected downstream layers in order. Existing
-downstream tables keep their previous version until their own stage succeeds.
-
-## Follow the Implementation
-
-Start with these files:
-
-| File | Purpose |
-|---|---|
-| `run_pipeline.py` | Selects one layer or runs the complete dependency chain |
-| `src/bronze.py` | Loads pandas DataFrames into Bronze in one transaction |
-| `src/silver.py` | Runs Silver SQL and validates the joins before commit |
-| `sql/01_silver.sql` | Contains the type cleaning, joins, and calculations |
-| `src/gold.py` | Runs and validates the Gold task independently |
-| `sql/02_gold.sql` | Contains the monthly aggregation |
-
-Python controls execution and failures. SQL owns relational transformations.
-This keeps the stage boundaries visible and lets an orchestrator retry one task.
-
-Detailed column contracts are documented in
-[docs/DATA_MODEL.md](docs/DATA_MODEL.md).
-
-## Dataset
-
-The project uses the **Global Electronics Retailer** dataset published by Maven
-Analytics. It contains fictitious retail transactions and related product,
-customer, store, and exchange-rate tables. Maven lists Microsoft as the source
-and the dataset licence as Public Domain.
-
-- [Dataset page](https://mavenanalytics.io/data-playground/global-electronics-retailer)
-- Core pipeline files: `Sales.csv`, `Products.csv`, and `Stores.csv`
-- Optional future files: `Customers.csv` and `Exchange_Rates.csv`
-- Source field reference: `docs/Data_Dictionary.csv`
-
-Customers and exchange rates are excluded from the core question. Product prices
-and costs are already supplied in USD, so this version does not claim to convert
-the transaction currency.
-
-## Manual Setup and Git
-
-If you already use Git, clone the repository instead of downloading the ZIP:
+Without `--layer`, the runner executes Bronze → Silver → Gold and stops at the
+first failure. Silver needs a committed Bronze table; Gold needs committed
+Silver. A Gold retry does not reload the CSVs or rebuild Silver. Each stage
+replaces its own output in a transaction, so a failed stage leaves its last
+committed result available.
 
 ```powershell
-git clone https://github.com/amrlasyraf/build-with-data.git
-cd build-with-data
+_local\.venv\Scripts\python.exe run_pipeline.py
 ```
 
-Manual setup from the project folder:
+This is a full-refresh pipeline. Run one writer at a time. If you change source
+data or rebuild an upstream stage, rerun downstream stages in order; they do
+not update themselves automatically.
 
-```powershell
-python -m venv _local\.venv
-_local\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python run_pipeline.py
-```
+## 5. Try the Optional Add-ons
 
-## Tests
+These are separate from the core pipeline. Their full instructions are in
+[Optional Add-ons](docs/ADD_ONS.md).
 
-The tests cover source validation, Bronze replacement, Silver calculations and
-join failures, Gold failure isolation and retries, missing dependencies, and
-runner stop behaviour.
-
-```powershell
-_local\.venv\Scripts\python.exe -m pytest
-```
-
-## Advanced: Run Data-Quality Checks
-
-Complete the core pipeline first, then run the optional quality suite:
+For data-quality checks, run:
 
 ```powershell
 _local\.venv\Scripts\python.exe -m add_ons.data_quality.run_checks
 ```
 
-It checks the committed Bronze, Silver, and Gold tables without rebuilding them.
-The checks cover non-empty tables, key uniqueness, broken product/store joins,
-positive quantities, delivery dates, allowed sales channels, Silver row-count
-preservation, required monetary values, Gold grain, and Gold-to-Silver totals.
+The checks cover keys, joins, dates, allowed channels, row counts, Gold grain,
+and reconciliation. Results are stored in `quality.check_results`; the latest
+run is in `quality.latest_check_results`. This add-on does not rebuild any
+pipeline stage.
 
-Every run appends its results to `quality.check_results`. The latest run is
-available through `quality.latest_check_results`. A failed rule is saved with
-its affected-row count and rate, printed in the terminal, and returns exit code
-1 for a future orchestrator.
-
-```sql
-SELECT run_id, checked_at, severity, layer, check_name, status,
-       failed_rows, total_rows, failure_rate, description
-FROM retail.quality.latest_check_results
-ORDER BY status, severity, layer, check_name;
-```
-
-The DQ suite is an advanced add-on because it introduces test severity,
-historical check results, and operational failure handling. The correctness
-rules themselves remain production-relevant.
-
-## Optional: Export Gold for Power BI
-
-The sample report is included at
-[add_ons/power_bi/sales-dashboard.pbix](add_ons/power_bi/sales-dashboard.pbix).
-Power BI Desktop is needed to open or edit it. After the pipeline succeeds,
-create the report's CSV source from your own Gold table:
+For Power BI, first export Gold as a CSV:
 
 ```powershell
 _local\.venv\Scripts\python.exe -m add_ons.power_bi.export_gold
 ```
 
-The export is written to:
+Open [the sample report](add_ons/power_bi/sales-dashboard.pbix) in Power BI
+Desktop. Under **Home → Transform data**, edit the CSV query's **Source** step
+to point to your `_local/exports/monthly_sales_summary.csv`, then select
+**Close & Apply** and **Refresh**. Save a personal copy in `_local/reports/`.
+The report is a downloadable `.pbix`, not a hosted dashboard. PostgreSQL is
+not required.
 
-```text
-_local\exports\monthly_sales_summary.csv
+## Reference
+
+### Manual setup with Git
+
+If you prefer the command line, run these commands from PowerShell:
+
+```powershell
+git clone https://github.com/amrlasyraf/build-with-data.git
+cd build-with-data
+python -m venv _local\.venv
+_local\.venv\Scripts\python.exe -m pip install -r requirements.txt
+_local\.venv\Scripts\python.exe run_pipeline.py
 ```
 
-Open the included `.pbix` in Power BI Desktop. Its saved CSV path may not exist
-on your computer, so update it before refreshing:
+### Tests
 
-1. Select **Home > Transform data**.
-2. Select the query for `monthly_sales_summary`, then its **Source** step.
-3. Use the step's settings (gear icon or **Edit settings**) to browse to your
-   `_local/exports/monthly_sales_summary.csv`.
-4. Select **Close & Apply**, then **Refresh**. Save your own report copy under
-   `_local/reports/`; that folder is not included in the repository.
-
-The export contains the same 979 rows as `gold.monthly_sales_summary`, ordered
-by month, category, and sales channel. Running the command again safely
-replaces the previous CSV. PostgreSQL is not required. The `.pbix` is a report
-file, not a hosted dashboard; each learner runs the pipeline and export locally.
-
-## Common Problems
-
-### Python was not found
-
-Install Python 3.11 or newer from [python.org](https://www.python.org/downloads/),
-enable **Add Python to PATH**, then close and reopen the launcher.
-
-### A source CSV was not found
-
-Extract the complete ZIP and keep `START_HERE.bat` in the project folder. Check
-that these files exist:
-
-```text
-Dataset\Sales.csv
-Dataset\Products.csv
-Dataset\Stores.csv
+```powershell
+_local\.venv\Scripts\python.exe -m pytest
 ```
 
-### Package installation failed
+Tests cover source validation, layer retries and failure isolation, joins,
+aggregations, data quality, and the Power BI export.
 
-Check your internet connection and run `START_HERE.bat` again. Packages install
-only inside this project's `_local\.venv` folder.
+### Dataset and scope
 
-### The database is locked
+The project uses the fictitious [Global Electronics Retailer dataset](https://mavenanalytics.io/data-playground/global-electronics-retailer)
+published by Maven Analytics. Maven lists Microsoft as the source and the
+licence as Public Domain. The source field reference is
+`docs/Data_Dictionary.csv`.
 
-Press Enter in the `OPEN_DATA.bat` window and close any other application using
-the DuckDB file. Then rerun the pipeline.
+`Dataset/optional/Customers.csv` and `Exchange_Rates.csv` are included but not
+used by the core pipeline. Prices and costs in `Products.csv` are already in
+USD; this project does not claim to convert transaction currencies. A
+PostgreSQL version is a possible future extension, not an implemented feature.
+Airflow, Spark, Kafka, and cloud deployment are outside Project #1.
 
-### Silver or Gold reports missing upstream tables
+### Common problems
 
-Run the required upstream layer shown in the error message, then retry the failed
-layer. For example, run Bronze before Silver and Silver before Gold.
-
-## Scope and Extensions
-
-The core stays local and focused. Optional extensions are described in
-[docs/ADD_ONS.md](docs/ADD_ONS.md):
-
-- data-quality checks and historical results (implemented)
-- PostgreSQL as a possible future client/server version (not implemented)
-- Power BI using Gold data
-
-Workflow orchestration, Spark, Kafka, and cloud deployment belong in later Build
-With Me projects. They add infrastructure and execution concepts beyond this
-pipeline's learning goal.
+| Problem | What to do |
+|---|---|
+| Python was not found | Install Python 3.11 or newer, enable **Add Python to PATH**, then reopen `START_HERE.bat`. |
+| A source CSV was not found | Extract the whole ZIP and keep `START_HERE.bat` alongside the `Dataset` folder. |
+| Package installation failed | Check the internet connection and run `START_HERE.bat` again. |
+| The database is locked | Press Enter in the `OPEN_DATA.bat` window and close other apps using the DuckDB file. |
+| Silver or Gold is missing its input | Run the upstream stage first, then retry the failed stage. |
