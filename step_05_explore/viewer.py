@@ -7,7 +7,7 @@ from support.pipeline.settings import DATABASE_PATH, OUTPUT_DIR
 
 def connect_viewer():
     if not DATABASE_PATH.is_file():
-        raise FileNotFoundError("Database not found. Run START_HERE.bat first.")
+        raise FileNotFoundError("Database not found. Run Bronze, Silver, and Gold first.")
     # The UI needs writable storage for its own state, separate from pipeline data.
     connection = duckdb.connect(str(OUTPUT_DIR / "viewer.duckdb"))
     try:
@@ -28,7 +28,7 @@ def main() -> int:
             connection.execute("LOAD ui")
             connection.execute("CALL start_ui()")
             print("In the browser, expand retail to find bronze, silver, and gold.")
-            print("Queries are in README.md under Explore the Result.")
+            print("Queries are in README.md under Step 05: Query the result.")
             print("Keep this window open while exploring.")
             print("Close this viewer BEFORE rerunning the pipeline.")
             try:

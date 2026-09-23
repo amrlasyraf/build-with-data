@@ -204,7 +204,7 @@
 
     .flow {
       display: grid;
-      grid-template-columns: repeat(5, minmax(160px, 1fr));
+      grid-template-columns: repeat(6, minmax(160px, 1fr));
       margin: 0;
       padding: 0;
       border: 1px solid var(--strong-line);
@@ -421,7 +421,7 @@
       }
 
       .phase + .phase { padding-left: 0; }
-      .flow { grid-template-columns: repeat(5, minmax(175px, 1fr)); }
+      .flow { grid-template-columns: repeat(6, minmax(175px, 1fr)); }
       .role-table { display: block; overflow-x: auto; }
     }
 
@@ -499,6 +499,12 @@
 
         <ol class="flow" aria-label="End-to-end data flow">
           <li>
+            <span class="step-number">00 / SETUP</span>
+            <h3>Prepare</h3>
+            <p>Install Python, create an environment, and install packages.</p>
+            <span class="step-state is-live">manual</span>
+          </li>
+          <li>
             <span class="step-number">01 / SOURCE</span>
             <h3>CSV files</h3>
             <p>Sales, products, and stores in UTF-8.</p>
@@ -530,7 +536,7 @@
           </li>
         </ol>
 
-        <p><a href="https://github.com/amrlasyraf/build-with-data#follow-the-numbered-folders">Open the numbered folder guide on GitHub</a>.</p>
+        <p><a href="https://github.com/amrlasyraf/build-with-data#follow-the-folders-in-order">Open the numbered folder guide on GitHub</a>.</p>
 
         <div class="quality-line">
           <span><strong>Quality gate:</strong> 14 contract-based checks across Bronze, Silver, and Gold.</span>
@@ -606,21 +612,22 @@
       <div class="wrap start-grid">
         <div>
           <p class="eyebrow">Run it locally</p>
-          <h2>Start with the working pipeline</h2>
+          <h2>Run each step yourself</h2>
           <ol class="steps">
-            <li>Download and extract the repository.</li>
-            <li>Double-click <strong>START_HERE.bat</strong>.</li>
-            <li>Wait for Bronze, Silver, and Gold to finish.</li>
-            <li>Double-click <strong>OPEN_DATA.bat</strong> to query the result.</li>
+            <li>Install Python 3.11 or newer; VS Code is recommended, not required.</li>
+            <li>Download and extract the repository, then open a PowerShell terminal in its folder.</li>
+            <li>Create a virtual environment and install the packages.</li>
+            <li>Run Bronze, Silver, and Gold as three separate commands.</li>
+            <li>Start the DuckDB viewer and query the result.</li>
           </ol>
         </div>
-        <pre aria-label="Command line setup"><code>git clone https://github.com/amrlasyraf/build-with-data.git
-cd build-with-data
+        <pre aria-label="Manual PowerShell setup and pipeline commands"><code>python --version
 python -m venv _local\.venv
-_local\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python run_pipeline.py
-python -m step_06_optional.power_bi.export_gold</code></pre>
+.\_local\.venv\Scripts\python.exe -m pip install -r step_00_setup\requirements.txt
+.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer bronze
+.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer silver
+.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer gold
+.\_local\.venv\Scripts\python.exe -m step_05_explore.viewer</code></pre>
       </div>
     </section>
 

@@ -1,7 +1,8 @@
 # 01 — Source data
 
-Start here after downloading the project. These CSV files are the input, not
-generated output. You do not need to edit them for the first run.
+Start here after [Step 00 — Setup](../step_00_setup/README.md). These CSV files
+are the input, not generated output. You do not need to edit them for the first
+run.
 
 | File | Look for |
 |---|---|

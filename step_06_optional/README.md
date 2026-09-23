@@ -9,7 +9,7 @@ when you want to explore data quality or Power BI.
 **Status: implemented.** Run it after the core pipeline:
 
 ```powershell
-_local\.venv\Scripts\python.exe -m step_06_optional.data_quality.run_checks
+.\_local\.venv\Scripts\python.exe -m step_06_optional.data_quality.run_checks
 ```
 
 ### Purpose
@@ -46,7 +46,7 @@ plain SQL and Python and adds no data-quality framework dependency.
 file after running the core pipeline:
 
 ```powershell
-_local\.venv\Scripts\python.exe -m step_06_optional.power_bi.export_gold
+.\_local\.venv\Scripts\python.exe -m step_06_optional.power_bi.export_gold
 ```
 
 The command writes `_local/exports/monthly_sales_summary.csv`. It replaces the
@@ -60,7 +60,7 @@ pipeline logic inside a dashboard.
 
 ### Beginner path
 
-1. Complete the core pipeline using `START_HERE.bat`.
+1. Complete Steps 00–04 by running Bronze, Silver, and Gold yourself.
 2. Run the Gold CSV export command above.
 3. Open [the sample report](power_bi/sales-dashboard.pbix) in Power
    BI Desktop.

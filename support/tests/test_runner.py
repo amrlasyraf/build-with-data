@@ -1,4 +1,12 @@
-import run_pipeline as runner
+import pytest
+
+from step_00_setup import run_pipeline as runner
+
+
+def test_layer_must_be_selected_explicitly():
+    with pytest.raises(SystemExit) as error:
+        runner.main([])
+    assert error.value.code == 2
 
 
 def test_gold_command_does_not_run_upstream(monkeypatch, tmp_path):
@@ -25,5 +33,5 @@ def test_all_stops_after_silver_failure(monkeypatch):
         raise ValueError("Silver failed")
     monkeypatch.setattr(runner, "build_silver", fail)
     monkeypatch.setattr(runner, "build_gold", lambda path: calls.append("gold"))
-    assert runner.main([]) == 1
+    assert runner.main(["--layer", "all"]) == 1
     assert calls == ["bronze", "silver"]

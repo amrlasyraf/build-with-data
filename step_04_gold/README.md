@@ -8,10 +8,10 @@ Read `gold.sql` to see the grouping and sums. Read `gold.py` to see how Gold
 runs in its own transaction. A Gold retry does not reload the CSVs or rebuild
 Bronze and Silver.
 
-Silver must already be committed. To retry only Gold from the repository root:
+Silver must already be committed. Run only Gold from the repository root:
 
 ```powershell
-_local\.venv\Scripts\python.exe run_pipeline.py --layer gold
+.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer gold
 ```
 
 Gross profit is **estimated** from standard product prices and costs. The

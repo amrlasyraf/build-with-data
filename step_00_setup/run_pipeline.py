@@ -1,7 +1,4 @@
-"""Run the local retail data pipeline.
-
-Validate source files, load Bronze, and build Silver and Gold with SQL.
-"""
+"""Run one selected pipeline layer, or explicitly run all three in order."""
 
 import argparse
 import logging
@@ -17,10 +14,10 @@ from step_02_bronze.source_validation import validate_sources
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Run all stages in order, or exactly one selected stage."""
+    """Run the selected stage against committed upstream inputs."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--layer", choices=["all", "bronze", "silver", "gold"], default="all",
-                        help="Run exactly this layer against committed inputs (default: all).")
+    parser.add_argument("--layer", choices=["bronze", "silver", "gold", "all"], required=True,
+                        help="Choose one layer; 'all' explicitly runs Bronze, Silver, then Gold.")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     stages = ["bronze", "silver", "gold"] if args.layer == "all" else [args.layer]
