@@ -290,10 +290,13 @@ rules themselves remain production-relevant.
 
 ## Optional: Export Gold for Power BI
 
-After the pipeline succeeds, create a Power BI-ready CSV:
+The sample report is included at
+[add_ons/power_bi/sales-dashboard.pbix](add_ons/power_bi/sales-dashboard.pbix).
+Power BI Desktop is needed to open or edit it. After the pipeline succeeds,
+create the report's CSV source from your own Gold table:
 
 ```powershell
-python -m add_ons.power_bi.export_gold
+_local\.venv\Scripts\python.exe -m add_ons.power_bi.export_gold
 ```
 
 The export is written to:
@@ -302,10 +305,20 @@ The export is written to:
 _local\exports\monthly_sales_summary.csv
 ```
 
-In Power BI Desktop, choose **Get data → Text/CSV** and select that file. The
-export contains the same 979 rows as `gold.monthly_sales_summary`, ordered by
-month, category, and sales channel. Running the command again safely replaces
-the previous CSV. PostgreSQL is not required.
+Open the included `.pbix` in Power BI Desktop. Its saved CSV source may point to
+the original creator's computer, so change it to your own file before refreshing:
+
+1. Select **Home > Transform data**.
+2. Select the query for `monthly_sales_summary`, then its **Source** step.
+3. Use the step's settings (gear icon or **Edit settings**) to browse to your
+   `_local/exports/monthly_sales_summary.csv`.
+4. Select **Close & Apply**, then **Refresh**. Save your working copy under
+   `_local/reports/` if you do not want Git to track your edits.
+
+The export contains the same 979 rows as `gold.monthly_sales_summary`, ordered
+by month, category, and sales channel. Running the command again safely
+replaces the previous CSV. PostgreSQL is not required. The `.pbix` is a report
+file, not a hosted dashboard; each learner runs the pipeline and export locally.
 
 ## Common Problems
 

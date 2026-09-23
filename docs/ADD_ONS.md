@@ -63,11 +63,11 @@ Docker may be offered as an alternative setup, but must not be the only path.
 
 ## Add-on 3 — Power BI
 
-**Status: Gold CSV export implemented.** Create the file after running the core
-pipeline:
+**Status: Gold CSV export and sample Power BI report available.** Create the
+file after running the core pipeline:
 
 ```powershell
-python -m add_ons.power_bi.export_gold
+_local\.venv\Scripts\python.exe -m add_ons.power_bi.export_gold
 ```
 
 The command writes `_local/exports/monthly_sales_summary.csv`. It replaces the
@@ -81,12 +81,18 @@ pipeline logic inside a dashboard.
 
 ### Beginner path
 
-1. Complete the core pipeline
-2. Run the Gold CSV export command
-3. In Power BI Desktop, choose **Get data → Text/CSV**
-4. Select `_local/exports/monthly_sales_summary.csv`
-5. Build a minimal report for monthly sales, estimated gross profit, category,
-   and channel
+1. Complete the core pipeline using `START_HERE.bat`.
+2. Run the Gold CSV export command above.
+3. Open [the sample report](../add_ons/power_bi/sales-dashboard.pbix) in Power
+   BI Desktop.
+4. Under **Home > Transform data**, select the `monthly_sales_summary` query
+   and edit its **Source** step to use your own
+   `_local/exports/monthly_sales_summary.csv`.
+5. Select **Close & Apply**, then **Refresh**. Inspect or change the visuals.
+
+The `.pbix` is shared so learners can open the same report layout, but its CSV
+path is machine-specific. Save personal edits under `_local/reports/` to keep
+them out of Git. A future `.pbit` template could prompt for the path on open.
 
 PostgreSQL remains an optional advanced connection path. It is not required for
 the Power BI phase.

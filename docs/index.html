@@ -473,9 +473,9 @@
             <span class="small">Bronze, Silver, Gold, retries, and DQ</span>
           </div>
           <div class="status-item">
-            <span class="status-label is-next">Next</span>
+            <span class="status-label is-live">Report available</span>
             <strong>Data analytics report</strong>
-            <span class="small">Power BI using the Gold layer</span>
+            <span class="small">Power BI using a local Gold CSV export</span>
           </div>
           <div class="status-item">
             <span class="status-label is-proposed">Proposed</span>
@@ -491,8 +491,8 @@
         <div class="section-heading">
           <h2>Follow the data</h2>
           <p class="section-intro">
-            Each stage has one job. The implemented pipeline ends at Gold today;
-            Power BI and forecasting extend the same trusted output instead of
+            Each stage has one job. The pipeline ends at Gold; the sample Power BI
+            report uses its export, while forecasting could extend it without
             rebuilding business logic elsewhere.
           </p>
         </div>
@@ -526,7 +526,7 @@
             <span class="step-number">05 / ANALYZE</span>
             <h3>Power BI</h3>
             <p>Trends, mix, profit, and drill-downs.</p>
-            <span class="step-state is-next">next</span>
+            <span class="step-state is-live">available</span>
           </li>
           <li>
             <span class="step-number">06 / PREDICT</span>
@@ -571,7 +571,7 @@
             <tr>
               <th>Data Analyst</th>
               <td><p>Turn Gold metrics into a Power BI report that explains sales, category mix, channel performance, and estimated gross profit.</p></td>
-              <td><span class="status-label is-next">Next phase</span></td>
+              <td><span class="status-label is-live">Report available</span></td>
             </tr>
             <tr>
               <th>Data Scientist</th>
@@ -650,12 +650,12 @@ python -m add_ons.power_bi.export_gold</code></pre>
             </ul>
           </article>
           <article class="phase">
-            <span class="status-label is-next">Phase 2 · Next</span>
+            <span class="status-label is-live">Phase 2 · In progress</span>
             <h3>Business analysis</h3>
             <ul>
               <li>Gold CSV export <strong>ready</strong></li>
-              <li>Power BI semantic measures</li>
-              <li>Monthly sales and profit report</li>
+              <li><a href="https://github.com/amrlasyraf/build-with-data/blob/main/add_ons/power_bi/sales-dashboard.pbix">Power BI report file</a> <strong>available</strong></li>
+              <li>Reconnect the CSV source on your computer</li>
               <li>Documented findings</li>
             </ul>
           </article>
