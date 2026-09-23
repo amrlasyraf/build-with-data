@@ -4,7 +4,7 @@ import duckdb
 import pandas as pd
 
 from step_02_bronze.bronze import load_bronze_tables
-from src.database import prepare_database
+from support.pipeline.database import prepare_database
 from step_02_bronze.source_validation import ValidatedSource
 
 

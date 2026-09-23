@@ -25,9 +25,11 @@ README and the files for that step:
 | 03 | [Silver](step_03_silver/README.md) | How sales are cleaned and joined |
 | 04 | [Gold](step_04_gold/README.md) | How the monthly summary is built |
 | 05 | [Explore](step_05_explore/README.md) | How to query the result in DuckDB |
+| 06 | [Optional](step_06_optional/README.md) | Data-quality checks and Power BI |
 
-You can stop after folder 05. `add_ons/`, `docs/`, `src/`, and `tests/` support
-the project but are not part of the first reading path.
+You can stop after folder 05. `support/` holds shared code, tests, and the data
+model for readers who want to go deeper. `docs/` contains the project website.
+Neither is another step you must complete.
 
 ## Download and Run
 
@@ -147,7 +149,7 @@ To see how the stages are implemented, read in this order:
 | `step_04_gold/gold.py` + `gold.sql` | Aggregates the monthly summary |
 
 Python manages execution and failures; SQL handles relational transformations.
-Column definitions and join rules are in [the data model](docs/DATA_MODEL.md).
+Column definitions and join rules are in [the data model](support/DATA_MODEL.md).
 
 ## Retry One Stage
 
@@ -177,12 +179,12 @@ not update themselves automatically.
 ## Optional Add-ons
 
 These are separate from the core pipeline. Their full instructions are in
-[Optional Add-ons](docs/ADD_ONS.md).
+[Step 06 — Optional](step_06_optional/README.md).
 
 For data-quality checks, run:
 
 ```powershell
-_local\.venv\Scripts\python.exe -m add_ons.data_quality.run_checks
+_local\.venv\Scripts\python.exe -m step_06_optional.data_quality.run_checks
 ```
 
 The checks cover keys, joins, dates, allowed channels, row counts, Gold grain,
@@ -193,10 +195,10 @@ pipeline stage.
 For Power BI, first export Gold as a CSV:
 
 ```powershell
-_local\.venv\Scripts\python.exe -m add_ons.power_bi.export_gold
+_local\.venv\Scripts\python.exe -m step_06_optional.power_bi.export_gold
 ```
 
-Open [the sample report](add_ons/power_bi/sales-dashboard.pbix) in Power BI
+Open [the sample report](step_06_optional/power_bi/sales-dashboard.pbix) in Power BI
 Desktop. Under **Home → Transform data**, edit the CSV query's **Source** step
 to point to your `_local/exports/monthly_sales_summary.csv`, then select
 **Close & Apply** and **Refresh**. Save a personal copy in `_local/reports/`.
@@ -220,7 +222,7 @@ _local\.venv\Scripts\python.exe run_pipeline.py
 ### Tests
 
 ```powershell
-_local\.venv\Scripts\python.exe -m pytest
+_local\.venv\Scripts\python.exe -m pytest support/tests
 ```
 
 Tests cover source validation, layer retries and failure isolation, joins,
@@ -231,7 +233,7 @@ aggregations, data quality, and the Power BI export.
 The project uses the fictitious [Global Electronics Retailer dataset](https://mavenanalytics.io/data-playground/global-electronics-retailer)
 published by Maven Analytics. Maven lists Microsoft as the source and the
 licence as Public Domain. The source field reference is
-`docs/Data_Dictionary.csv`.
+`step_01_data/Data_Dictionary.csv`.
 
 `step_01_data/optional/Customers.csv` and `Exchange_Rates.csv` are included but not
 used by the core pipeline. Prices and costs in `Products.csv` are already in

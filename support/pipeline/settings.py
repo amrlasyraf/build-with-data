@@ -3,7 +3,7 @@
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATASET_DIR = PROJECT_ROOT / "step_01_data"
 LOCAL_DIR = PROJECT_ROOT / "_local"
 OUTPUT_DIR = LOCAL_DIR / "output"

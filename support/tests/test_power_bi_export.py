@@ -3,8 +3,8 @@ from pathlib import Path
 
 import duckdb
 
-from add_ons.power_bi.export_gold import export_gold_csv
-from src.database import prepare_database
+from step_06_optional.power_bi.export_gold import export_gold_csv
+from support.pipeline.database import prepare_database
 
 
 def test_export_gold_csv_writes_ordered_rows(tmp_path: Path) -> None:

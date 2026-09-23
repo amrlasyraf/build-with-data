@@ -9,4 +9,4 @@ state separately in `_local/output/viewer.duckdb`. Press Enter in the viewer
 window before rerunning the pipeline so it can write to the database.
 
 Once you can explain the Gold result, you can try the optional
-[data-quality and Power BI add-ons](../docs/ADD_ONS.md).
+[data-quality and Power BI add-ons](../step_06_optional/README.md).

@@ -4,8 +4,8 @@ from pathlib import Path
 
 import duckdb
 
-from src.settings import DATABASE_PATH, LOCAL_DIR
-from src.stage_inputs import require_tables
+from support.pipeline.settings import DATABASE_PATH, LOCAL_DIR
+from support.pipeline.stage_inputs import require_tables
 
 
 DEFAULT_EXPORT_PATH = LOCAL_DIR / "exports" / "monthly_sales_summary.csv"

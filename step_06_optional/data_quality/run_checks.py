@@ -7,8 +7,8 @@ from uuid import uuid4
 
 import duckdb
 
-from src.settings import DATABASE_PATH
-from src.stage_inputs import require_tables
+from support.pipeline.settings import DATABASE_PATH
+from support.pipeline.stage_inputs import require_tables
 
 
 @dataclass(frozen=True)

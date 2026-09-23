@@ -4,8 +4,8 @@ from pathlib import Path
 
 import duckdb
 
-from src.settings import PROJECT_ROOT
-from src.stage_inputs import require_tables
+from support.pipeline.settings import PROJECT_ROOT
+from support.pipeline.stage_inputs import require_tables
 
 
 def build_silver(database_path: Path) -> int:

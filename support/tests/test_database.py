@@ -2,7 +2,7 @@ from pathlib import Path
 
 import duckdb
 
-from src.database import prepare_database
+from support.pipeline.database import prepare_database
 
 
 def test_prepare_database_creates_medallion_schemas(tmp_path: Path) -> None:

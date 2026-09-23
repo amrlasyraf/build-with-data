@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.settings import BRONZE_COLUMN_NAMES, BRONZE_TABLE_NAMES, SOURCE_COLUMNS
+from support.pipeline.settings import BRONZE_COLUMN_NAMES, BRONZE_TABLE_NAMES, SOURCE_COLUMNS
 
 
 class SourceValidationError(ValueError):

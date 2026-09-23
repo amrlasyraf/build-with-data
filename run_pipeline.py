@@ -11,8 +11,8 @@ import duckdb
 from step_02_bronze.bronze import load_bronze_tables
 from step_03_silver.silver import build_silver
 from step_04_gold.gold import build_gold
-from src.database import prepare_database
-from src.settings import DATASET_DIR, DATABASE_PATH
+from support.pipeline.database import prepare_database
+from support.pipeline.settings import DATASET_DIR, DATABASE_PATH
 from step_02_bronze.source_validation import validate_sources
 
 

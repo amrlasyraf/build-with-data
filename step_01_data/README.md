@@ -15,4 +15,7 @@ the pipeline uses them to join sales to the other two files in Step 3.
 The `optional/` files are not loaded in this project. `Customers.csv` and
 `Exchange_Rates.csv` are left for future experiments.
 
+`Data_Dictionary.csv` explains the source fields. It is a reference, not a
+fourth pipeline input.
+
 Next: [02 — Bronze](../step_02_bronze/README.md).

@@ -2,7 +2,7 @@
 
 import duckdb
 
-from src.settings import DATABASE_PATH, OUTPUT_DIR
+from support.pipeline.settings import DATABASE_PATH, OUTPUT_DIR
 
 
 def connect_viewer():
@@ -28,7 +28,7 @@ def main() -> int:
             connection.execute("LOAD ui")
             connection.execute("CALL start_ui()")
             print("In the browser, expand retail to find bronze, silver, and gold.")
-            print("Queries are in README.md under Step 2: Open the Result.")
+            print("Queries are in README.md under Explore the Result.")
             print("Keep this window open while exploring.")
             print("Close this viewer BEFORE rerunning the pipeline.")
             try:

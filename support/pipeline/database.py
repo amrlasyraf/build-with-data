@@ -4,7 +4,7 @@ from pathlib import Path
 
 import duckdb
 
-from src.settings import MEDALLION_SCHEMAS
+from support.pipeline.settings import MEDALLION_SCHEMAS
 
 
 def prepare_database(database_path: Path) -> tuple[str, ...]:

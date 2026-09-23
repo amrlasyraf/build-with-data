@@ -1,7 +1,7 @@
 import duckdb
 
-from add_ons.data_quality.run_checks import CHECKS, run_quality_checks
-from src.database import prepare_database
+from step_06_optional.data_quality.run_checks import CHECKS, run_quality_checks
+from support.pipeline.database import prepare_database
 
 
 def create_valid_pipeline_tables(database_path):
