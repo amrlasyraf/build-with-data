@@ -1,0 +1,12 @@
+# Private instructions, machine-specific setup, caches, and generated data.
+_local/
+
+# Safety nets for tools that generate caches beside the source code.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Tool-managed local settings that must stay in conventional locations.
+.env
+.vscode/
+.idea/
