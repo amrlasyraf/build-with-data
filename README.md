@@ -58,7 +58,8 @@ _local\output\retail_pipeline.duckdb
 
 `_local` contains machine-specific files such as the Python environment and
 generated databases. Git ignores the whole folder, so none of it is published.
-Delete `_local` whenever you want to reset the project completely.
+To start over, remove the generated files in `_local` and rerun the launcher.
+Back up any personal work saved there before deleting the folder.
 
 With the supplied data, expect:
 
@@ -171,15 +172,15 @@ Running the command without an option executes Bronze → Silver → Gold and st
 at the first failure:
 
 ```powershell
-python run_pipeline.py
+_local\.venv\Scripts\python.exe run_pipeline.py
 ```
 
 Every layer can also run independently:
 
 ```powershell
-python run_pipeline.py --layer bronze
-python run_pipeline.py --layer silver
-python run_pipeline.py --layer gold
+_local\.venv\Scripts\python.exe run_pipeline.py --layer bronze
+_local\.venv\Scripts\python.exe run_pipeline.py --layer silver
+_local\.venv\Scripts\python.exe run_pipeline.py --layer gold
 ```
 
 Silver requires committed Bronze tables. Gold requires committed Silver. A Gold
@@ -256,7 +257,7 @@ join failures, Gold failure isolation and retries, missing dependencies, and
 runner stop behaviour.
 
 ```powershell
-python -m pytest
+_local\.venv\Scripts\python.exe -m pytest
 ```
 
 ## Advanced: Run Data-Quality Checks
@@ -264,7 +265,7 @@ python -m pytest
 Complete the core pipeline first, then run the optional quality suite:
 
 ```powershell
-python -m add_ons.data_quality.run_checks
+_local\.venv\Scripts\python.exe -m add_ons.data_quality.run_checks
 ```
 
 It checks the committed Bronze, Silver, and Gold tables without rebuilding them.
@@ -305,15 +306,15 @@ The export is written to:
 _local\exports\monthly_sales_summary.csv
 ```
 
-Open the included `.pbix` in Power BI Desktop. Its saved CSV source may point to
-the original creator's computer, so change it to your own file before refreshing:
+Open the included `.pbix` in Power BI Desktop. Its saved CSV path may not exist
+on your computer, so update it before refreshing:
 
 1. Select **Home > Transform data**.
 2. Select the query for `monthly_sales_summary`, then its **Source** step.
 3. Use the step's settings (gear icon or **Edit settings**) to browse to your
    `_local/exports/monthly_sales_summary.csv`.
-4. Select **Close & Apply**, then **Refresh**. Save your working copy under
-   `_local/reports/` if you do not want Git to track your edits.
+4. Select **Close & Apply**, then **Refresh**. Save your own report copy under
+   `_local/reports/`; that folder is not included in the repository.
 
 The export contains the same 979 rows as `gold.monthly_sales_summary`, ordered
 by month, category, and sales channel. Running the command again safely
@@ -359,7 +360,7 @@ The core stays local and focused. Optional extensions are described in
 [docs/ADD_ONS.md](docs/ADD_ONS.md):
 
 - data-quality checks and historical results (implemented)
-- PostgreSQL as a client/server destination
+- PostgreSQL as a possible future client/server version (not implemented)
 - Power BI using Gold data
 
 Workflow orchestration, Spark, Kafka, and cloud deployment belong in later Build

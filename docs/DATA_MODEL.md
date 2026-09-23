@@ -1,9 +1,8 @@
 # Data Model and Table Contracts
 
-This document defines the tables before implementation. Column names use
-`snake_case` in DuckDB even though the CSV headers contain spaces. The table
-names and transformation rules are intentionally portable so the PostgreSQL
-add-on can reproduce the same model later.
+This document describes the tables created by the local pipeline. Column names
+use `snake_case` in DuckDB even though the CSV headers contain spaces. The
+tables use the `bronze`, `silver`, and `gold` schemas in one DuckDB file.
 
 ## Grain and Keys
 
@@ -17,8 +16,8 @@ add-on can reproduce the same model later.
 
 ## Bronze Contracts
 
-Bronze keeps the source fields recognizable. Dates and numbers may be loaded as
-text first so malformed values can be identified before transformation.
+Bronze keeps the source fields recognizable. Source values, including dates and
+numbers, are loaded as text so Silver can handle their types explicitly.
 
 ### `bronze.sales`
 
@@ -71,7 +70,7 @@ text first so malformed values can be identified before transformation.
 
 All columns below are typed and analytics-ready.
 
-| Column | Suggested type | Rule |
+| Column | Type | Rule |
 |---|---|---|
 | `order_number` | `integer` | From sales |
 | `line_item` | `integer` | From sales |
@@ -99,7 +98,7 @@ All columns below are typed and analytics-ready.
 
 ### `gold.monthly_sales_summary`
 
-| Column | Suggested type | Rule |
+| Column | Type | Rule |
 |---|---|---|
 | `sales_month` | `date` | First day of the order month |
 | `product_category` | `text` | Grouping from Silver |
@@ -117,8 +116,8 @@ bronze.sales.store_key   = bronze.stores.store_key
 ```
 
 Both are many-to-one joins. The Silver row count must therefore match the Bronze
-sales row count. A missing or duplicate dimension key should fail the pipeline
-instead of silently dropping or multiplying transactions.
+sales row count. The pipeline rejects a missing or duplicate product or store
+key instead of silently dropping or multiplying transactions.
 
 ## Intentional Omissions
 

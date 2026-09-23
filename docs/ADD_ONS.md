@@ -1,17 +1,15 @@
 # Optional Add-ons
 
 The core project ends with a working local DuckDB pipeline and a queryable Gold
-table. Everything in this document is optional and should be attempted only
-after the learner can run and explain the core pipeline.
-
-Add-ons must not change the core command or become prerequisites for it.
+table. These add-ons are optional. Start with the core pipeline; return here
+when you want to explore data quality or Power BI.
 
 ## Add-on 1 — Data Quality
 
 **Status: implemented.** Run it after the core pipeline:
 
 ```powershell
-python -m add_ons.data_quality.run_checks
+_local\.venv\Scripts\python.exe -m add_ons.data_quality.run_checks
 ```
 
 ### Purpose
@@ -44,6 +42,10 @@ plain SQL and Python and adds no data-quality framework dependency.
 
 ## Add-on 2 — PostgreSQL
 
+**Status: not implemented.** The repository does not include a PostgreSQL
+pipeline or setup guide. This is a possible follow-up project, not a step needed
+for the DuckDB pipeline or Power BI report.
+
 ### Purpose
 
 Introduce the difference between an embedded database and a client/server
@@ -58,8 +60,8 @@ database after the learner already understands the pipeline itself.
 - load the same three sources and reproduce the same Gold result
 - inspect tables with pgAdmin or DBeaver
 
-The PostgreSQL version should reuse the same data model and SQL where practical.
-Docker may be offered as an alternative setup, but must not be the only path.
+These are topics for a future implementation; the commands in this repository
+continue to use DuckDB.
 
 ## Add-on 3 — Power BI
 
@@ -90,15 +92,14 @@ pipeline logic inside a dashboard.
    `_local/exports/monthly_sales_summary.csv`.
 5. Select **Close & Apply**, then **Refresh**. Inspect or change the visuals.
 
-The `.pbix` is shared so learners can open the same report layout, but its CSV
-path is machine-specific. Save personal edits under `_local/reports/` to keep
-them out of Git. A future `.pbit` template could prompt for the path on open.
+The `.pbix` provides a report layout, but its saved CSV path may not work on
+another computer. Save personal edits under `_local/reports/`; that folder is
+not included in the repository.
 
-PostgreSQL remains an optional advanced connection path. It is not required for
-the Power BI phase.
+The Power BI report uses the CSV export. No PostgreSQL connection is needed or
+included in this version.
 
 ## Later Projects, Not Add-ons
 
-Spark, Kafka, workflow orchestration, and cloud deployment introduce enough new
-concepts to deserve separate Build With Me projects. They should not be attached
-to Project #1 merely to expand its technology list.
+Spark, Kafka, workflow orchestration, and cloud deployment are outside this
+local project. They introduce infrastructure beyond the pipeline covered here.
