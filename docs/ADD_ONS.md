@@ -63,21 +63,33 @@ Docker may be offered as an alternative setup, but must not be the only path.
 
 ## Add-on 3 — Power BI
 
+**Status: Gold CSV export implemented.** Create the file after running the core
+pipeline:
+
+```powershell
+python -m add_ons.power_bi.export_gold
+```
+
+The command writes `_local/exports/monthly_sales_summary.csv`. It replaces the
+previous export, preserves a stable row order, and leaves the DuckDB tables
+unchanged.
+
 ### Purpose
 
 Show how an analytics tool consumes the Gold layer rather than rebuilding the
 pipeline logic inside a dashboard.
 
-### Preferred path
+### Beginner path
 
-1. Complete the PostgreSQL add-on
-2. Connect Power BI to PostgreSQL
-3. Import `gold.monthly_sales_summary`
-4. Build a minimal report for monthly sales, estimated gross profit, category,
+1. Complete the core pipeline
+2. Run the Gold CSV export command
+3. In Power BI Desktop, choose **Get data → Text/CSV**
+4. Select `_local/exports/monthly_sales_summary.csv`
+5. Build a minimal report for monthly sales, estimated gross profit, category,
    and channel
 
-For learners who do not want PostgreSQL, the core pipeline may export the Gold
-table to CSV as a simpler Power BI input.
+PostgreSQL remains an optional advanced connection path. It is not required for
+the Power BI phase.
 
 ## Later Projects, Not Add-ons
 

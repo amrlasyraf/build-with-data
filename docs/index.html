@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A visual guide to Build With Data Project 01: a local retail pipeline from CSV files through Bronze, Silver, Gold, Power BI, and a proposed sales forecast.">
+  <meta property="og:title" content="Build With Data · Project 01">
+  <meta property="og:description" content="Follow one retail dataset through data engineering, analytics, and data science.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://amrlasyraf.github.io/build-with-data/">
+  <link rel="canonical" href="https://amrlasyraf.github.io/build-with-data/">
+  <title>Build With Data · Project 01</title>
+  <style>
+    :root {
+      --paper: #f5f2ea;
+      --surface: #fffdf8;
+      --ink: #172023;
+      --muted: #5f6b6e;
+      --line: #c9cec8;
+      --strong-line: #879391;
+      --green: #216b50;
+      --green-soft: #dfece5;
+      --blue: #295f85;
+      --blue-soft: #e2ebf1;
+      --amber: #98651c;
+      --amber-soft: #f2e8d5;
+      --red: #93453c;
+      --code: #10191c;
+      --code-ink: #e6efec;
+      --max-width: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    a:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 4px;
+    }
+
+    .wrap {
+      width: min(calc(100% - 40px), var(--max-width));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(245, 242, 234, 0.96);
+    }
+
+    .nav {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a { text-underline-offset: 4px; }
+
+    .hero {
+      padding: 84px 0 68px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 16px;
+      color: var(--green);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 900px;
+      margin-bottom: 22px;
+      font-size: clamp(2.5rem, 7vw, 5.6rem);
+      font-weight: 680;
+      letter-spacing: -0.055em;
+      line-height: 0.98;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+      margin-bottom: 30px;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--ink);
+      padding: 10px 17px;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .button.primary {
+      background: var(--ink);
+      color: var(--surface);
+    }
+
+    .button:hover { transform: translateY(-1px); }
+
+    .status-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 54px;
+      border: 1px solid var(--strong-line);
+      background: var(--surface);
+    }
+
+    .status-item {
+      min-height: 112px;
+      padding: 20px;
+    }
+
+    .status-item + .status-item { border-left: 1px solid var(--line); }
+
+    .status-label {
+      display: inline-block;
+      margin-bottom: 9px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .is-live { color: var(--green); }
+    .is-next { color: var(--blue); }
+    .is-proposed { color: var(--amber); }
+
+    .status-item strong {
+      display: block;
+      font-size: 1.08rem;
+    }
+
+    .section {
+      padding: 76px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.8fr) minmax(300px, 1.2fr);
+      gap: 50px;
+      margin-bottom: 42px;
+    }
+
+    h2 {
+      margin-bottom: 0;
+      font-size: clamp(1.8rem, 4vw, 3.1rem);
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+    }
+
+    .section-intro {
+      max-width: 660px;
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(140px, 1fr));
+      margin: 0;
+      padding: 0;
+      border: 1px solid var(--strong-line);
+      background: var(--surface);
+      list-style: none;
+      overflow-x: auto;
+    }
+
+    .flow li {
+      position: relative;
+      min-height: 190px;
+      padding: 20px 18px 22px;
+    }
+
+    .flow li + li { border-left: 1px solid var(--line); }
+
+    .flow li + li::before {
+      content: "→";
+      position: absolute;
+      top: 84px;
+      left: -13px;
+      display: grid;
+      width: 25px;
+      height: 25px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--surface);
+      font-size: 0.9rem;
+    }
+
+    .step-number {
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.72rem;
+    }
+
+    .flow h3 {
+      margin: 22px 0 8px;
+      font-size: 1.12rem;
+    }
+
+    .flow p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .step-state {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 2px 7px;
+      border: 1px solid currentColor;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.66rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .quality-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 14px;
+      padding: 13px 16px;
+      border-left: 4px solid var(--green);
+      background: var(--green-soft);
+      font-size: 0.9rem;
+    }
+
+    .quality-line strong { color: var(--green); }
+
+    .role-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+    }
+
+    .role-table th,
+    .role-table td {
+      padding: 20px;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .role-table th {
+      width: 18%;
+      font-size: 1rem;
+    }
+
+    .role-table td:nth-child(2) { width: 52%; }
+
+    .role-table p { margin-bottom: 0; }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .questions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--strong-line);
+      background: var(--surface);
+    }
+
+    .question {
+      padding: 30px;
+    }
+
+    .question + .question { border-left: 1px solid var(--line); }
+
+    .question-label {
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    blockquote {
+      margin: 18px 0 0;
+      font-size: clamp(1.2rem, 2.7vw, 1.8rem);
+      font-weight: 640;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+    }
+
+    .start-grid {
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: 44px;
+      align-items: start;
+    }
+
+    .steps {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .steps li { margin-bottom: 13px; }
+
+    pre {
+      margin: 0;
+      padding: 24px;
+      overflow-x: auto;
+      background: var(--code);
+      color: var(--code-ink);
+      font: 0.9rem/1.7 ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--strong-line);
+    }
+
+    .phase {
+      padding: 26px 24px 10px 0;
+    }
+
+    .phase + .phase {
+      padding-left: 24px;
+      border-left: 1px solid var(--line);
+    }
+
+    .phase h3 { margin-bottom: 10px; }
+
+    .phase ul {
+      margin: 0;
+      padding-left: 19px;
+      color: var(--muted);
+    }
+
+    .note {
+      margin-top: 34px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      background: var(--amber-soft);
+    }
+
+    .note strong { color: var(--amber); }
+
+    footer {
+      padding: 36px 0 46px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    @media (max-width: 860px) {
+      .status-strip,
+      .section-heading,
+      .questions,
+      .start-grid,
+      .roadmap {
+        grid-template-columns: 1fr;
+      }
+
+      .status-item + .status-item,
+      .question + .question,
+      .phase + .phase {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .phase + .phase { padding-left: 0; }
+      .flow { grid-template-columns: repeat(6, minmax(175px, 1fr)); }
+      .role-table { display: block; overflow-x: auto; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(calc(100% - 24px), var(--max-width)); }
+      .hero { padding: 60px 0 48px; }
+      .section { padding: 56px 0; }
+      .nav-links a:first-child { display: none; }
+      footer .wrap { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .button:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#top">Build With Data / 01</a>
+      <div class="nav-links">
+        <a href="#flow">Project flow</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="https://github.com/amrlasyraf/build-with-data">GitHub</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">Local retail data project</p>
+        <h1>From raw transactions to decisions—and eventually, a forecast.</h1>
+        <p class="hero-copy">
+          One public dataset connects three disciplines. Build the pipeline as a
+          data engineer, explain the business as a data analyst, then test whether
+          a simple forecasting model adds value as a data scientist.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/amrlasyraf/build-with-data">Open the repository</a>
+          <a class="button" href="https://github.com/amrlasyraf/build-with-data/archive/refs/heads/main.zip">Download the project</a>
+        </div>
+
+        <div class="status-strip" aria-label="Project status">
+          <div class="status-item">
+            <span class="status-label is-live">Built and tested</span>
+            <strong>Data engineering pipeline</strong>
+            <span class="small">Bronze, Silver, Gold, retries, and DQ</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label is-next">Next</span>
+            <strong>Data analytics report</strong>
+            <span class="small">Power BI using the Gold layer</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label is-proposed">Proposed</span>
+            <strong>Data science forecast</strong>
+            <span class="small">A measured next-month sales experiment</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="flow">
+      <div class="wrap">
+        <div class="section-heading">
+          <h2>Follow the data</h2>
+          <p class="section-intro">
+            Each stage has one job. The implemented pipeline ends at Gold today;
+            Power BI and forecasting extend the same trusted output instead of
+            rebuilding business logic elsewhere.
+          </p>
+        </div>
+
+        <ol class="flow" aria-label="End-to-end data flow">
+          <li>
+            <span class="step-number">01 / SOURCE</span>
+            <h3>CSV files</h3>
+            <p>Sales, products, and stores in UTF-8.</p>
+            <span class="step-state is-live">ready</span>
+          </li>
+          <li>
+            <span class="step-number">02 / BRONZE</span>
+            <h3>Preserve</h3>
+            <p>Source-shaped tables with load metadata.</p>
+            <span class="step-state is-live">ready</span>
+          </li>
+          <li>
+            <span class="step-number">03 / SILVER</span>
+            <h3>Clean + join</h3>
+            <p>Typed sales enriched with product and store data.</p>
+            <span class="step-state is-live">ready</span>
+          </li>
+          <li>
+            <span class="step-number">04 / GOLD</span>
+            <h3>Summarize</h3>
+            <p>979 monthly category and channel rows.</p>
+            <span class="step-state is-live">ready</span>
+          </li>
+          <li>
+            <span class="step-number">05 / ANALYZE</span>
+            <h3>Power BI</h3>
+            <p>Trends, mix, profit, and drill-downs.</p>
+            <span class="step-state is-next">next</span>
+          </li>
+          <li>
+            <span class="step-number">06 / PREDICT</span>
+            <h3>Forecast</h3>
+            <p>Compare a model with a simple baseline.</p>
+            <span class="step-state is-proposed">proposed</span>
+          </li>
+        </ol>
+
+        <div class="quality-line">
+          <span><strong>Quality gate:</strong> 14 contract-based checks across Bronze, Silver, and Gold.</span>
+          <span>Latest validation: 14 / 14 passed</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="roles">
+      <div class="wrap">
+        <div class="section-heading">
+          <h2>Three roles, one model</h2>
+          <p class="section-intro">
+            The value of an all-in-one project is continuity. Each role can see
+            where its input came from, what assumptions were made, and who uses
+            the result next.
+          </p>
+        </div>
+
+        <table class="role-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Responsibility in this project</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Data Engineer</th>
+              <td><p>Validate files, load Bronze, transform Silver, aggregate Gold, and prove the output is trustworthy.</p></td>
+              <td><span class="status-label is-live">Implemented</span></td>
+            </tr>
+            <tr>
+              <th>Data Analyst</th>
+              <td><p>Turn Gold metrics into a Power BI report that explains sales, category mix, channel performance, and estimated gross profit.</p></td>
+              <td><span class="status-label is-next">Next phase</span></td>
+            </tr>
+            <tr>
+              <th>Data Scientist</th>
+              <td><p>Build a time-aware forecast, compare it with a naive baseline, and document when the prediction should not be trusted.</p></td>
+              <td><span class="status-label is-proposed">Proposed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="questions">
+      <div class="wrap">
+        <div class="section-heading">
+          <h2>Questions before tools</h2>
+          <p class="section-intro">
+            Power BI and machine learning are useful only when they answer a
+            defined question. These two questions keep the project focused.
+          </p>
+        </div>
+
+        <div class="questions">
+          <article class="question">
+            <span class="question-label">Current analytics question</span>
+            <blockquote>How do sales and estimated gross profit change by month, product category, and sales channel?</blockquote>
+          </article>
+          <article class="question">
+            <span class="question-label">Proposed forecasting question</span>
+            <blockquote>Given history up to this month, what gross sales might each category and channel produce next month?</blockquote>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="start">
+      <div class="wrap start-grid">
+        <div>
+          <p class="eyebrow">Run it locally</p>
+          <h2>Start with the working pipeline</h2>
+          <ol class="steps">
+            <li>Download and extract the repository.</li>
+            <li>Double-click <strong>START_HERE.bat</strong>.</li>
+            <li>Wait for Bronze, Silver, and Gold to finish.</li>
+            <li>Double-click <strong>OPEN_DATA.bat</strong> to query the result.</li>
+          </ol>
+        </div>
+        <pre aria-label="Command line setup"><code>git clone https://github.com/amrlasyraf/build-with-data.git
+cd build-with-data
+python -m venv _local\.venv
+_local\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python run_pipeline.py
+python -m add_ons.power_bi.export_gold</code></pre>
+      </div>
+    </section>
+
+    <section class="section" id="roadmap">
+      <div class="wrap">
+        <div class="section-heading">
+          <h2>Project roadmap</h2>
+          <p class="section-intro">
+            The core stays runnable at every phase. New layers are added only
+            after the previous output has a clear contract and validation.
+          </p>
+        </div>
+
+        <div class="roadmap">
+          <article class="phase">
+            <span class="status-label is-live">Phase 1 · Complete</span>
+            <h3>Reliable data foundation</h3>
+            <ul>
+              <li>Local Medallion pipeline</li>
+              <li>Independent stage retries</li>
+              <li>Automated tests and DQ history</li>
+              <li>DuckDB data explorer</li>
+            </ul>
+          </article>
+          <article class="phase">
+            <span class="status-label is-next">Phase 2 · Next</span>
+            <h3>Business analysis</h3>
+            <ul>
+              <li>Gold CSV export <strong>ready</strong></li>
+              <li>Power BI semantic measures</li>
+              <li>Monthly sales and profit report</li>
+              <li>Documented findings</li>
+            </ul>
+          </article>
+          <article class="phase">
+            <span class="status-label is-proposed">Phase 3 · Proposed</span>
+            <h3>Forecasting experiment</h3>
+            <ul>
+              <li>Chronological train/test split</li>
+              <li>Naive seasonal baseline</li>
+              <li>One interpretable model</li>
+              <li>MAE plus limitations</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="note">
+          <strong>No pretend prediction:</strong> the model phase is successful
+          only if it beats a clearly defined baseline on unseen months. If it
+          does not, that result will be reported honestly.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>Build With Data · Project 01</span>
+      <span>Dataset: Global Electronics Retailer · Published by Maven Analytics</span>
+    </div>
+  </footer>
+</body>
+</html>

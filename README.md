@@ -10,6 +10,9 @@ The pipeline uses Python and pandas for source validation, DuckDB for local
 storage, and SQL for transformations. It runs without a cloud account, database
 server, Docker, or API key.
 
+View the [visual project guide](https://amrlasyraf.github.io/build-with-data/)
+for the complete Data Engineering → Data Analytics → Data Science roadmap.
+
 The business question is:
 
 > How do sales and estimated gross profit change by month, product category,
@@ -284,6 +287,25 @@ ORDER BY status, severity, layer, check_name;
 The DQ suite is an advanced add-on because it introduces test severity,
 historical check results, and operational failure handling. The correctness
 rules themselves remain production-relevant.
+
+## Optional: Export Gold for Power BI
+
+After the pipeline succeeds, create a Power BI-ready CSV:
+
+```powershell
+python -m add_ons.power_bi.export_gold
+```
+
+The export is written to:
+
+```text
+_local\exports\monthly_sales_summary.csv
+```
+
+In Power BI Desktop, choose **Get data → Text/CSV** and select that file. The
+export contains the same 979 rows as `gold.monthly_sales_summary`, ordered by
+month, category, and sales channel. Running the command again safely replaces
+the previous CSV. PostgreSQL is not required.
 
 ## Common Problems
 
