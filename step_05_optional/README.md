@@ -42,7 +42,7 @@ plain SQL and Python and adds no data-quality framework dependency.
 
 ## 2. Open the Power BI Report
 
-**Status: Gold CSV export and sample Power BI report available.** Create the
+**Status: Gold CSV export and Power BI report complete.** Create the
 file after running the core pipeline:
 
 ```powershell
@@ -62,7 +62,7 @@ pipeline logic inside a dashboard.
 
 1. Complete Steps 00–04 by running Bronze, Silver, and Gold yourself.
 2. Run the Gold CSV export command above.
-3. Open [the sample report](power_bi/sales-dashboard.pbix) in Power
+3. Open [the completed report](power_bi/sales-dashboard.pbix) in Power
    BI Desktop.
 4. Under **Home > Transform data**, select the `monthly_sales_summary` query
    and edit its **Source** step to use your own

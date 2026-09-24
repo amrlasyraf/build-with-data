@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A visual guide to Build With Data Project 01: a local retail pipeline from CSV files through Bronze, Silver, and Gold, with optional Power BI and forecasting exercises.">
+  <meta name="description" content="A visual guide to Build With Data Project 01: a local retail pipeline from CSV files through Bronze, Silver, and Gold, with optional data quality, Power BI, and forecasting exercises.">
   <meta property="og:title" content="Build With Data · Project 01">
   <meta property="og:description" content="Follow one retail dataset through data engineering, analytics, and data science.">
   <meta property="og:type" content="website">
@@ -217,7 +217,7 @@
       top: 76px;
       left: 50%;
       height: 52px;
-      border-left: 1px solid var(--strong-line);
+      border-left: 1px dashed var(--strong-line);
     }
 
     .flow-check strong,
@@ -542,10 +542,10 @@
           <div class="status-item">
             <span class="status-label is-live">Built and tested</span>
             <strong>Data engineering pipeline</strong>
-            <span class="small">Bronze, Silver, Gold, retries, and DQ</span>
+            <span class="small">Bronze, Silver, Gold, and retries</span>
           </div>
           <div class="status-item">
-            <span class="status-label is-live">Report available</span>
+            <span class="status-label is-live">Report complete</span>
             <strong>Data analytics report</strong>
             <span class="small">Power BI using a local Gold CSV export</span>
           </div>
@@ -573,9 +573,9 @@
         <div class="flow-scroll" role="region" aria-label="Project data flow" tabindex="0">
         <div class="flow-diagram">
         <div class="flow-check">
-          <span class="step-number">BRONZE TO SILVER</span>
+          <span class="step-number">05 / OPTIONAL</span>
           <strong>Data quality</strong>
-          <small>Source and join checks in the core</small>
+          <small>14 extra checks, run after Gold</small>
         </div>
         <ol class="flow" aria-label="Core project steps">
           <li>
@@ -619,7 +619,7 @@
           <li class="power-bi-branch">
             <span class="step-number">05 / OPTIONAL</span>
             <h3>Power BI</h3>
-            <p>Export Gold to CSV and open the sample report. Available now.</p>
+            <p>Export Gold to CSV and open the completed report.</p>
           </li>
         </ul>
         </div>
@@ -661,7 +661,7 @@
             <tr>
               <th>Data Analyst</th>
               <td><p>Turn Gold metrics into a Power BI report that explains sales, category mix, channel performance, and estimated gross profit.</p></td>
-              <td><span class="status-label is-live">Report available</span></td>
+              <td><span class="status-label is-live">Report complete</span></td>
             </tr>
             <tr>
               <th>Data Scientist</th>
@@ -725,7 +725,7 @@ python -m venv _local\.venv
         <div class="section-heading">
           <h2>Project roadmap</h2>
           <p class="section-intro">
-            The local pipeline, Power BI sample, and forecasting experiment are
+            The local pipeline, Power BI report, and forecasting experiment are
             available. The forecast has high test error and is not decision-ready.
           </p>
         </div>
@@ -737,18 +737,17 @@ python -m venv _local\.venv
             <ul>
               <li>Local Medallion pipeline</li>
               <li>Independent stage retries</li>
-              <li>Automated tests and DQ history</li>
+              <li>Automated tests; optional DQ history</li>
               <li>DuckDB data explorer</li>
             </ul>
           </article>
           <article class="phase">
-            <span class="status-label is-live">Phase 2 · In progress</span>
-            <h3>Business analysis</h3>
+            <span class="status-label is-live">Phase 2 · Complete</span>
+            <h3>Power BI report</h3>
             <ul>
               <li>Gold CSV export <strong>ready</strong></li>
-              <li><a href="https://github.com/amrlasyraf/build-with-data/blob/main/step_05_optional/power_bi/sales-dashboard.pbix">Power BI report file</a> <strong>available</strong></li>
+              <li><a href="https://github.com/amrlasyraf/build-with-data/blob/main/step_05_optional/power_bi/sales-dashboard.pbix">Power BI report file</a> <strong>complete</strong></li>
               <li>Reconnect the CSV source on your computer</li>
-              <li>Documented findings</li>
             </ul>
           </article>
           <article class="phase">
