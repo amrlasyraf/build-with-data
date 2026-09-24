@@ -1,15 +1,15 @@
-# 06 — Optional: data quality and Power BI
+# 05 — Optional: data quality, Power BI, and forecasting
 
 The core project ends with a working local DuckDB pipeline and a queryable Gold
 table. These add-ons are optional. Start with the core pipeline; return here
-when you want to explore data quality or Power BI.
+when you want to explore data quality, Power BI, or forecasting.
 
 ## 1. Check Data Quality
 
 **Status: implemented.** Run it after the core pipeline:
 
 ```powershell
-.\_local\.venv\Scripts\python.exe -m step_06_optional.data_quality.run_checks
+.\_local\.venv\Scripts\python.exe -m step_05_optional.data_quality.run_checks
 ```
 
 ### Purpose
@@ -46,7 +46,7 @@ plain SQL and Python and adds no data-quality framework dependency.
 file after running the core pipeline:
 
 ```powershell
-.\_local\.venv\Scripts\python.exe -m step_06_optional.power_bi.export_gold
+.\_local\.venv\Scripts\python.exe -m step_05_optional.power_bi.export_gold
 ```
 
 The command writes `_local/exports/monthly_sales_summary.csv`. It replaces the
@@ -75,6 +75,22 @@ not included in the repository.
 
 The Power BI report uses the CSV export. No PostgreSQL connection is needed or
 included in this version.
+
+## 3. Try a Sales Forecast
+
+**Status: implemented as a local teaching experiment.** It reads cleaned
+Silver transactions and does not change the Bronze, Silver, or Gold tables.
+See the [forecasting guide](forecasting/README.md) for the assumptions and
+limitations. Install its one extra package, then run it from the repository
+root:
+
+```powershell
+.\_local\.venv\Scripts\python.exe -m pip install -r step_05_optional\forecasting\requirements.txt
+.\_local\.venv\Scripts\python.exe -m step_05_optional.forecasting.run_forecast
+```
+
+The experiment writes a 12-month backtest, a next-month forecast, and a metric
+summary under `_local/forecasts/`. These files are local to your computer.
 
 ## Future Idea: PostgreSQL
 

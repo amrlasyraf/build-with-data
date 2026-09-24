@@ -1,6 +1,6 @@
 import duckdb
 
-from step_06_optional.data_quality.run_checks import CHECKS, run_quality_checks
+from step_05_optional.data_quality.run_checks import CHECKS, run_quality_checks
 from support.pipeline.database import prepare_database
 
 

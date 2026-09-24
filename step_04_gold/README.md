@@ -17,4 +17,15 @@ Silver must already be committed. Run only Gold from the repository root:
 Gross profit is **estimated** from standard product prices and costs. The
 source does not supply discounts, refunds, tax, or final accounting profit.
 
-Next: [05 — Explore](../step_05_explore/README.md).
+Reopen the viewer with `-m support.viewer` and inspect the monthly result:
+
+```sql
+SELECT sales_month, product_category, sales_channel,
+       gross_sales_usd, estimated_gross_profit_usd
+FROM retail.gold.monthly_sales_summary
+ORDER BY sales_month, product_category, sales_channel
+LIMIT 20;
+```
+
+The core project is complete here. If you want more, choose an
+[optional exercise](../step_05_optional/README.md).

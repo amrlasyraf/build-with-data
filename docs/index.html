@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A visual guide to Build With Data Project 01: a local retail pipeline from CSV files through Bronze, Silver, Gold, Power BI, and a proposed sales forecast.">
+  <meta name="description" content="A visual guide to Build With Data Project 01: a local retail pipeline from CSV files through Bronze, Silver, and Gold, with optional Power BI and forecasting exercises.">
   <meta property="og:title" content="Build With Data · Project 01">
   <meta property="og:description" content="Follow one retail dataset through data engineering, analytics, and data science.">
   <meta property="og:type" content="website">
@@ -27,7 +27,7 @@
       --red: #93453c;
       --code: #10191c;
       --code-ink: #e6efec;
-      --max-width: 1160px;
+      --max-width: 920px;
     }
 
     * { box-sizing: border-box; }
@@ -38,7 +38,7 @@
       margin: 0;
       background: var(--paper);
       color: var(--ink);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
       line-height: 1.6;
     }
 
@@ -50,7 +50,7 @@
     }
 
     .wrap {
-      width: min(calc(100% - 40px), var(--max-width));
+      width: min(calc(100% - 96px), var(--max-width));
       margin-inline: auto;
     }
 
@@ -68,10 +68,9 @@
     }
 
     .brand {
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
       font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
+      font-weight: 650;
+      letter-spacing: 0.02em;
       text-decoration: none;
       text-transform: uppercase;
     }
@@ -86,36 +85,36 @@
     .nav-links a { text-underline-offset: 4px; }
 
     .hero {
-      padding: 84px 0 68px;
+      padding: 70px 0 64px;
       border-bottom: 1px solid var(--line);
     }
 
     .eyebrow {
       margin: 0 0 16px;
       color: var(--green);
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
       font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.09em;
+      font-weight: 650;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
     h1, h2, h3, p { margin-top: 0; }
 
     h1 {
-      max-width: 900px;
-      margin-bottom: 22px;
-      font-size: clamp(2.5rem, 7vw, 5.6rem);
-      font-weight: 680;
-      letter-spacing: -0.055em;
-      line-height: 0.98;
+      max-width: 760px;
+      margin-bottom: 20px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.6rem, 5.2vw, 4.25rem);
+      font-weight: 400;
+      letter-spacing: -0.035em;
+      line-height: 1.08;
     }
 
     .hero-copy {
-      max-width: 720px;
-      margin-bottom: 30px;
+      max-width: 620px;
+      margin-bottom: 28px;
       color: var(--muted);
-      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      font-size: 1.08rem;
     }
 
     .actions {
@@ -129,41 +128,36 @@
       min-height: 44px;
       align-items: center;
       justify-content: center;
-      border: 1px solid var(--ink);
+      border: 1px solid var(--line);
       padding: 10px 17px;
-      font-weight: 650;
+      font-weight: 600;
       text-decoration: none;
     }
 
     .button.primary {
-      background: var(--ink);
-      color: var(--surface);
+      border-color: var(--ink);
     }
 
-    .button:hover { transform: translateY(-1px); }
+    .button:hover { text-decoration: underline; }
 
     .status-strip {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      margin-top: 54px;
-      border: 1px solid var(--strong-line);
-      background: var(--surface);
+      gap: 20px;
+      margin-top: 48px;
+      border-top: 1px solid var(--strong-line);
     }
 
     .status-item {
-      min-height: 112px;
-      padding: 20px;
+      padding: 18px 8px 0 0;
     }
-
-    .status-item + .status-item { border-left: 1px solid var(--line); }
 
     .status-label {
       display: inline-block;
       margin-bottom: 9px;
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
       font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.07em;
+      font-weight: 700;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
@@ -173,77 +167,112 @@
 
     .status-item strong {
       display: block;
-      font-size: 1.08rem;
+      font-size: 1rem;
     }
 
     .section {
-      padding: 76px 0;
+      padding: 68px 0;
       border-bottom: 1px solid var(--line);
     }
 
     .section-heading {
-      display: grid;
-      grid-template-columns: minmax(220px, 0.8fr) minmax(300px, 1.2fr);
-      gap: 50px;
-      margin-bottom: 42px;
+      margin-bottom: 34px;
     }
 
     h2 {
       margin-bottom: 0;
-      font-size: clamp(1.8rem, 4vw, 3.1rem);
-      letter-spacing: -0.035em;
-      line-height: 1.05;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.9rem, 3.4vw, 2.65rem);
+      font-weight: 400;
+      letter-spacing: -0.025em;
+      line-height: 1.16;
     }
 
     .section-intro {
-      max-width: 660px;
-      margin-bottom: 0;
+      max-width: 640px;
+      margin: 12px 0 0;
       color: var(--muted);
       font-size: 1.05rem;
     }
 
+    .flow-scroll { overflow-x: auto; }
+
+    .flow-diagram {
+      position: relative;
+      min-width: 840px;
+      padding-top: 102px;
+    }
+
+    .flow-check {
+      position: absolute;
+      top: 0;
+      left: calc(50% - 110px);
+      width: 220px;
+      text-align: center;
+    }
+
+    .flow-check::after {
+      content: "";
+      position: absolute;
+      top: 76px;
+      left: 50%;
+      height: 52px;
+      border-left: 1px solid var(--strong-line);
+    }
+
+    .flow-check strong,
+    .flow-check small { display: block; }
+
+    .flow-check strong { margin: 2px 0; font-size: 0.98rem; }
+
+    .flow-check small { color: var(--muted); font-size: 0.8rem; }
+
     .flow {
       display: grid;
-      grid-template-columns: repeat(6, minmax(160px, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       margin: 0;
       padding: 0;
-      border: 1px solid var(--strong-line);
-      background: var(--surface);
       list-style: none;
-      overflow-x: auto;
     }
 
     .flow li {
       position: relative;
       min-height: 190px;
-      padding: 20px 18px 22px;
+      padding: 51px 16px 16px 0;
     }
 
-    .flow li + li { border-left: 1px solid var(--line); }
-
-    .flow li + li::before {
-      content: "→";
+    .flow li::before {
+      content: "";
       position: absolute;
-      top: 84px;
-      left: -13px;
-      display: grid;
-      width: 25px;
-      height: 25px;
-      place-items: center;
-      border: 1px solid var(--line);
+      top: 20px;
+      left: 0;
+      width: 13px;
+      height: 13px;
+      border: 3px solid var(--green);
       border-radius: 50%;
-      background: var(--surface);
-      font-size: 0.9rem;
+      background: var(--paper);
+      z-index: 1;
     }
+
+    .flow li::after {
+      content: "";
+      position: absolute;
+      top: 26px;
+      left: 13px;
+      right: 0;
+      border-top: 1px solid var(--strong-line);
+    }
+
+    .flow li:last-child::after { display: none; }
 
     .step-number {
       color: var(--muted);
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
       font-size: 0.72rem;
+      font-weight: 650;
     }
 
     .flow h3 {
-      margin: 22px 0 8px;
+      margin: 12px 0 8px;
       font-size: 1.12rem;
     }
 
@@ -256,14 +285,49 @@
 
     .step-state {
       display: inline-block;
-      margin-top: 16px;
-      padding: 2px 7px;
-      border: 1px solid currentColor;
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      margin-top: 10px;
       font-size: 0.66rem;
       font-weight: 700;
       text-transform: uppercase;
     }
+
+    .flow-branches {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      margin: 28px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .flow-branches li {
+      position: relative;
+      padding: 0 16px 0 12px;
+      border-left: 1px solid var(--strong-line);
+    }
+
+    .flow-branches .forecast-branch { grid-column: 4; }
+
+    .flow-branches .power-bi-branch { grid-column: 5; }
+
+    .flow-branches li::before {
+      content: "";
+      position: absolute;
+      top: -28px;
+      left: -1px;
+      height: 28px;
+      border-left: 1px solid var(--strong-line);
+    }
+
+    .flow-branches h3 { margin: 7px 0 5px; font-size: 1rem; }
+
+    .flow-branches p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .flow-hint { display: none; }
 
     .quality-line {
       display: flex;
@@ -271,9 +335,8 @@
       justify-content: space-between;
       gap: 20px;
       margin-top: 14px;
-      padding: 13px 16px;
-      border-left: 4px solid var(--green);
-      background: var(--green-soft);
+      padding: 12px 0 12px 16px;
+      border-left: 3px solid var(--green);
       font-size: 0.9rem;
     }
 
@@ -310,19 +373,20 @@
     .questions {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      border: 1px solid var(--strong-line);
-      background: var(--surface);
+      border-top: 1px solid var(--strong-line);
     }
 
     .question {
-      padding: 30px;
+      padding: 22px 24px 0 0;
     }
 
-    .question + .question { border-left: 1px solid var(--line); }
+    .question + .question {
+      padding-left: 24px;
+      border-left: 1px solid var(--line);
+    }
 
     .question-label {
       color: var(--muted);
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
       font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -331,16 +395,17 @@
 
     blockquote {
       margin: 18px 0 0;
-      font-size: clamp(1.2rem, 2.7vw, 1.8rem);
-      font-weight: 640;
-      letter-spacing: -0.025em;
-      line-height: 1.25;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.36;
     }
 
     .start-grid {
       display: grid;
-      grid-template-columns: 0.75fr 1.25fr;
-      gap: 44px;
+      grid-template-columns: 1fr;
+      gap: 24px;
       align-items: start;
     }
 
@@ -367,11 +432,11 @@
     }
 
     .phase {
-      padding: 26px 24px 10px 0;
+      padding: 24px 20px 10px 0;
     }
 
     .phase + .phase {
-      padding-left: 24px;
+      padding-left: 20px;
       border-left: 1px solid var(--line);
     }
 
@@ -406,7 +471,6 @@
 
     @media (max-width: 860px) {
       .status-strip,
-      .section-heading,
       .questions,
       .start-grid,
       .roadmap {
@@ -420,22 +484,30 @@
         border-top: 1px solid var(--line);
       }
 
+      .question + .question { padding-left: 0; }
       .phase + .phase { padding-left: 0; }
-      .flow { grid-template-columns: repeat(6, minmax(175px, 1fr)); }
       .role-table { display: block; overflow-x: auto; }
+      .flow-hint {
+        display: block;
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
     }
 
     @media (max-width: 560px) {
-      .wrap { width: min(calc(100% - 24px), var(--max-width)); }
-      .hero { padding: 60px 0 48px; }
-      .section { padding: 56px 0; }
+      .wrap { width: min(calc(100% - 32px), var(--max-width)); }
+      .hero { padding: 50px 0 48px; }
+      .section { padding: 54px 0; }
+      .quality-line { display: block; }
+      .quality-line span { display: block; }
+      .quality-line span + span { margin-top: 4px; }
       .nav-links a:first-child { display: none; }
       footer .wrap { flex-direction: column; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .button:hover { transform: none; }
     }
   </style>
 </head>
@@ -455,11 +527,11 @@
     <section class="hero">
       <div class="wrap">
         <p class="eyebrow">Local retail data project</p>
-        <h1>From raw transactions to decisions and eventually, a forecast.</h1>
+        <h1>A retail pipeline you can run and inspect.</h1>
         <p class="hero-copy">
-          One public dataset connects three disciplines. Build the pipeline as a
-          data engineer, explain the business as a data analyst, then test whether
-          a simple forecasting model adds value as a data scientist.
+          Start with three CSV files. Run Bronze, Silver, and Gold locally,
+          then query the result in DuckDB. The optional Power BI report uses
+          the same Gold output.
         </p>
         <div class="actions">
           <a class="button primary" href="https://github.com/amrlasyraf/build-with-data">Open the repository</a>
@@ -478,9 +550,9 @@
             <span class="small">Power BI using a local Gold CSV export</span>
           </div>
           <div class="status-item">
-            <span class="status-label is-proposed">Proposed</span>
+            <span class="status-label is-live">Experiment available</span>
             <strong>Data science forecast</strong>
-            <span class="small">A measured next-month sales experiment</span>
+            <span class="small">Backtested, but not decision-ready</span>
           </div>
         </div>
       </div>
@@ -491,13 +563,21 @@
         <div class="section-heading">
           <h2>Follow the data</h2>
           <p class="section-intro">
-            The numbered folders in the repository follow this path. Complete
-            the local pipeline first; Power BI and forecasting are separate
-            extensions of the Gold output.
+            Follow the core stages from left to right and inspect each layer
+            as you build it. Forecasting branches from Silver; the Power BI
+            report uses Gold.
           </p>
         </div>
 
-        <ol class="flow" aria-label="End-to-end data flow">
+        <p class="flow-hint">Scroll sideways to see the full flow.</p>
+        <div class="flow-scroll" role="region" aria-label="Project data flow" tabindex="0">
+        <div class="flow-diagram">
+        <div class="flow-check">
+          <span class="step-number">BRONZE TO SILVER</span>
+          <strong>Data quality</strong>
+          <small>Source and join checks in the core</small>
+        </div>
+        <ol class="flow" aria-label="Core project steps">
           <li>
             <span class="step-number">00 / SETUP</span>
             <h3>Prepare</h3>
@@ -513,33 +593,42 @@
           <li>
             <span class="step-number">02 / BRONZE</span>
             <h3>Preserve</h3>
-            <p>Source-shaped tables with load metadata.</p>
+            <p>Load source-shaped tables, then inspect the raw values.</p>
             <span class="step-state is-live">ready</span>
           </li>
           <li>
             <span class="step-number">03 / SILVER</span>
             <h3>Clean + join</h3>
-            <p>Typed sales enriched with product and store data.</p>
+            <p>Clean and join sales, then compare with Bronze.</p>
             <span class="step-state is-live">ready</span>
           </li>
           <li>
             <span class="step-number">04 / GOLD</span>
             <h3>Summarize</h3>
-            <p>979 monthly category and channel rows.</p>
-            <span class="step-state is-live">ready</span>
-          </li>
-          <li>
-            <span class="step-number">05 / EXPLORE</span>
-            <h3>Query locally</h3>
-            <p>Open DuckDB and inspect the Bronze, Silver, and Gold tables.</p>
+            <p>Summarize 979 rows, then query the result.</p>
             <span class="step-state is-live">ready</span>
           </li>
         </ol>
 
+        <ul class="flow-branches" aria-label="Branches from Silver and Gold">
+          <li class="forecast-branch">
+            <span class="step-number">05 / OPTIONAL</span>
+            <h3>Forecasting</h3>
+            <p>Backtest monthly sales from Silver. Available, but high error.</p>
+          </li>
+          <li class="power-bi-branch">
+            <span class="step-number">05 / OPTIONAL</span>
+            <h3>Power BI</h3>
+            <p>Export Gold to CSV and open the sample report. Available now.</p>
+          </li>
+        </ul>
+        </div>
+        </div>
+
         <p><a href="https://github.com/amrlasyraf/build-with-data#follow-the-folders-in-order">Open the numbered folder guide on GitHub</a>.</p>
 
         <div class="quality-line">
-          <span><strong>Quality gate:</strong> 14 contract-based checks across Bronze, Silver, and Gold.</span>
+          <span><strong>Optional deeper check:</strong> 14 rules across Bronze, Silver, and Gold, run after the pipeline.</span>
           <span>Latest validation: 14 / 14 passed</span>
         </div>
       </div>
@@ -548,11 +637,10 @@
     <section class="section" id="roles">
       <div class="wrap">
         <div class="section-heading">
-          <h2>Three roles, one model</h2>
+          <h2>How the work connects</h2>
           <p class="section-intro">
-            The value of an all-in-one project is continuity. Each role can see
-            where its input came from, what assumptions were made, and who uses
-            the result next.
+            Power BI reads the Gold summary. The forecasting experiment builds
+            a monthly modeling set from cleaned Silver transactions.
           </p>
         </div>
 
@@ -577,8 +665,8 @@
             </tr>
             <tr>
               <th>Data Scientist</th>
-              <td><p>Build a time-aware forecast, compare it with a naive baseline, and document when the prediction should not be trusted.</p></td>
-              <td><span class="status-label is-proposed">Proposed</span></td>
+              <td><p>Build a time-aware forecast, compare it with a naive baseline, and document why the result should not be used for business decisions.</p></td>
+              <td><span class="status-label is-live">Experiment available</span></td>
             </tr>
           </tbody>
         </table>
@@ -588,10 +676,11 @@
     <section class="section" id="questions">
       <div class="wrap">
         <div class="section-heading">
-          <h2>Questions before tools</h2>
+          <h2>Questions this project asks</h2>
           <p class="section-intro">
-            Power BI and machine learning are useful only when they answer a
-            defined question. These two questions keep the project focused.
+            The current analysis is about sales and estimated gross profit.
+            The forecasting experiment asks whether a model beats a seasonal
+            baseline. Its high error is part of the result.
           </p>
         </div>
 
@@ -601,7 +690,7 @@
             <blockquote>How do sales and estimated gross profit change by month, product category, and sales channel?</blockquote>
           </article>
           <article class="question">
-            <span class="question-label">Proposed forecasting question</span>
+            <span class="question-label">Forecasting experiment</span>
             <blockquote>Given history up to this month, what gross sales might each category and channel produce next month?</blockquote>
           </article>
         </div>
@@ -618,7 +707,7 @@
             <li>Download and extract the repository, then open a PowerShell terminal in its folder.</li>
             <li>Create a virtual environment and install the packages.</li>
             <li>Run Bronze, Silver, and Gold as three separate commands.</li>
-            <li>Start the DuckDB viewer and query the result.</li>
+            <li>Inspect each layer with the DuckDB viewer as you go.</li>
           </ol>
         </div>
         <pre aria-label="Manual PowerShell setup and pipeline commands"><code>python --version
@@ -627,7 +716,7 @@ python -m venv _local\.venv
 .\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer bronze
 .\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer silver
 .\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer gold
-.\_local\.venv\Scripts\python.exe -m step_05_explore.viewer</code></pre>
+.\_local\.venv\Scripts\python.exe -m support.viewer</code></pre>
       </div>
     </section>
 
@@ -636,8 +725,8 @@ python -m venv _local\.venv
         <div class="section-heading">
           <h2>Project roadmap</h2>
           <p class="section-intro">
-            The core stays runnable at every phase. New layers are added only
-            after the previous output has a clear contract and validation.
+            The local pipeline, Power BI sample, and forecasting experiment are
+            available. The forecast has high test error and is not decision-ready.
           </p>
         </div>
 
@@ -657,27 +746,27 @@ python -m venv _local\.venv
             <h3>Business analysis</h3>
             <ul>
               <li>Gold CSV export <strong>ready</strong></li>
-              <li><a href="https://github.com/amrlasyraf/build-with-data/blob/main/step_06_optional/power_bi/sales-dashboard.pbix">Power BI report file</a> <strong>available</strong></li>
+              <li><a href="https://github.com/amrlasyraf/build-with-data/blob/main/step_05_optional/power_bi/sales-dashboard.pbix">Power BI report file</a> <strong>available</strong></li>
               <li>Reconnect the CSV source on your computer</li>
               <li>Documented findings</li>
             </ul>
           </article>
           <article class="phase">
-            <span class="status-label is-proposed">Phase 3 · Proposed</span>
+            <span class="status-label is-live">Phase 3 · Experiment available</span>
             <h3>Forecasting experiment</h3>
             <ul>
               <li>Chronological train/test split</li>
               <li>Naive seasonal baseline</li>
-              <li>One interpretable model</li>
-              <li>MAE plus limitations</li>
+              <li>Ridge regression model</li>
+              <li>MAE, WAPE, and limitations</li>
             </ul>
           </article>
         </div>
 
         <div class="note">
-          <strong>No pretend prediction:</strong> the model phase is successful
-          only if it beats a clearly defined baseline on unseen months. If it
-          does not, that result will be reported honestly.
+          <strong>Forecasting result:</strong> Ridge beat the seasonal baseline
+          on the 12-month holdout, but its WAPE was 134.72%. This historical
+          teaching result is not reliable enough for business decisions.
         </div>
       </div>
     </section>

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import duckdb
 
-from step_06_optional.power_bi.export_gold import export_gold_csv
+from step_05_optional.power_bi.export_gold import export_gold_csv
 from support.pipeline.database import prepare_database
 
 

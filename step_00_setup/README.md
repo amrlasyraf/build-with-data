@@ -14,7 +14,7 @@ and Gold yourself from a terminal.
 | [VS Code](https://code.visualstudio.com/Download) | Recommended | Makes it easier to browse the folders, edit code, and open a terminal |
 | [Python extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) | Recommended with VS Code | Adds Python editing and interpreter support; it does not install Python |
 | Git | No | You can use GitHub's **Download ZIP** instead |
-| Power BI Desktop | No | Needed only for the optional report in Step 06 |
+| Power BI Desktop | No | Needed only for the optional report in Step 05 |
 
 The `requirements.txt` file in this folder lists the project's Python packages.
 DuckDB is installed by the package command below; you do not need to install

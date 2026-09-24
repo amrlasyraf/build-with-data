@@ -25,10 +25,10 @@ runs automatically when you download the repository.
 | 02 | [Bronze](step_02_bronze/README.md) | Run the source load |
 | 03 | [Silver](step_03_silver/README.md) | Run the cleaning and joins |
 | 04 | [Gold](step_04_gold/README.md) | Run the monthly aggregation |
-| 05 | [Explore](step_05_explore/README.md) | Open DuckDB and query the tables |
-| 06 | [Optional](step_06_optional/README.md) | Try data quality or Power BI |
+| 05 | [Optional](step_05_optional/README.md) | Try deeper data quality, Power BI, or forecasting |
 
-You can stop after Step 05. `support/` holds shared code, tests, and the data
+You can stop after Step 04. Inspect the data while completing each layer; it is
+not a separate stage. `support/` holds the optional viewer, shared code, tests, and the data
 model for a deeper look. `docs/` contains the project website; neither is an
 extra step you must complete. The root `README.md` is GitHub's entry page, and
 `.gitignore` keeps generated files out of Git.
@@ -97,6 +97,14 @@ Run the first stage yourself:
 Expected: 62,884 sales rows, 2,517 products, and 67 stores. The command
 creates `_local/output/retail_pipeline.duckdb`.
 
+To inspect Bronze, start the viewer, run a query from the
+[Bronze guide](step_02_bronze/README.md), then stop the viewer before running
+Silver:
+
+```powershell
+.\_local\.venv\Scripts\python.exe -m support.viewer
+```
+
 ## 03 — Build Silver
 
 Silver converts dates and numbers, joins sales to products and stores, and
@@ -108,7 +116,8 @@ have succeeded first.
 ```
 
 Expected: 62,884 rows in `silver.sales_enriched`. Read
-`step_03_silver/silver.sql` to see the cleaning and joins.
+`step_03_silver/silver.sql` to see the cleaning and joins. Reopen the viewer
+and compare Bronze and Silver using the [Silver guide](step_03_silver/README.md).
 
 ## 04 — Build Gold
 
@@ -130,18 +139,22 @@ estimated_gross_profit_usd = quantity × (unit_price_usd - unit_cost_usd)
 This is **estimated** gross profit, not accounting profit. The source has no
 transaction-level discounts, taxes, refunds, or final accounting costs.
 
+Reopen the viewer and answer the project question with the query in the
+[Gold guide](step_04_gold/README.md). Exploration is part of each layer, not
+another pipeline step.
+
 Each stage replaces only its own table in a transaction. If Gold fails, you
 can retry the Gold command without reloading Bronze or rebuilding Silver. A
 failed stage leaves its previous committed result available. After changing
 upstream data, rerun the affected downstream stages in order; this local
 pipeline does not update them automatically. Run only one writer at a time.
 
-## 05 — Query the result
+## Explore while you build
 
 Start the local DuckDB viewer yourself:
 
 ```powershell
-.\_local\.venv\Scripts\python.exe -m step_05_explore.viewer
+.\_local\.venv\Scripts\python.exe -m support.viewer
 ```
 
 The first viewer run needs internet access for the DuckDB UI extension and
@@ -190,11 +203,12 @@ Press Enter in the viewer's terminal to stop it before rerunning a pipeline
 stage. Closing only the browser tab does not release the database lock. If the
 browser does not open, visit `http://localhost:4213` while the viewer runs.
 
-## 06 — Optional exercises
+## 05 — Optional exercises
 
-The core pipeline is complete after Step 05. [Step 06](step_06_optional/README.md)
-explains the separate data-quality checks and Power BI export/report. Neither
-is required for Bronze, Silver, or Gold. PostgreSQL is not implemented.
+The core pipeline is complete after Step 04. [Step 05](step_05_optional/README.md)
+explains deeper data-quality checks, the Power BI export/report, and a
+Silver-based forecasting experiment. None is required for Bronze, Silver, or
+Gold. PostgreSQL is not implemented.
 
 ## Reference
 

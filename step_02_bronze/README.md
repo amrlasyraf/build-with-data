@@ -14,7 +14,21 @@ After completing Step 00, run Bronze from the repository root:
 .\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer bronze
 ```
 
-After completing Gold, use the viewer in Step 05 to inspect
-`retail.bronze.sales`, `retail.bronze.products`, and `retail.bronze.stores`.
+Inspect Bronze now with the local viewer. Run this from the repository root,
+then expand the `retail` database in the browser and try the query:
+
+```powershell
+.\_local\.venv\Scripts\python.exe -m support.viewer
+```
+
+```sql
+SELECT order_number, order_date, product_key, store_key, quantity
+FROM retail.bronze.sales
+ORDER BY order_number, line_item
+LIMIT 10;
+```
+
+Press Enter in the viewer terminal to stop it before running Silver. Closing
+only the browser tab does not release the database connection.
 
 Next: [03 — Silver](../step_03_silver/README.md).

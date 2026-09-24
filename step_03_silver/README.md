@@ -16,8 +16,21 @@ root:
 .\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer silver
 ```
 
-Compare a source-formatted price in `retail.bronze.products` with its numeric
-value in `retail.silver.sales_enriched`. The [main README](../README.md)
-has a query you can paste into the data viewer.
+Reopen the viewer with `-m support.viewer` and compare the source-formatted
+price with the numeric Silver result:
+
+```sql
+SELECT product_key, unit_price_usd
+FROM retail.bronze.products
+WHERE product_key = '1';
+
+SELECT order_number, product_name, quantity, unit_price_usd, gross_sales_usd
+FROM retail.silver.sales_enriched
+WHERE product_key = 1
+ORDER BY order_number, line_item
+LIMIT 10;
+```
+
+Stop the viewer before running Gold.
 
 Next: [04 — Gold](../step_04_gold/README.md).
