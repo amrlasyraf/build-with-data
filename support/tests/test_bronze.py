@@ -3,9 +3,8 @@ from pathlib import Path
 import duckdb
 import pandas as pd
 
-from step_02_bronze.bronze import load_bronze_tables
+from step_02_bronze.bronze import SourceFile, load_bronze_tables
 from support.pipeline.database import prepare_database
-from step_02_bronze.source_validation import ValidatedSource
 
 
 def test_load_bronze_tables_replaces_data_without_duplicates(tmp_path: Path) -> None:
@@ -13,7 +12,7 @@ def test_load_bronze_tables_replaces_data_without_duplicates(tmp_path: Path) -> 
     prepare_database(database_path)
 
     sources = [
-        ValidatedSource(
+        SourceFile(
             file_name="Sales.csv",
             table_name="sales",
             dataframe=pd.DataFrame(
@@ -30,7 +29,7 @@ def test_load_bronze_tables_replaces_data_without_duplicates(tmp_path: Path) -> 
                 }
             ),
         ),
-        ValidatedSource(
+        SourceFile(
             file_name="Products.csv",
             table_name="products",
             dataframe=pd.DataFrame(
@@ -48,7 +47,7 @@ def test_load_bronze_tables_replaces_data_without_duplicates(tmp_path: Path) -> 
                 }
             ),
         ),
-        ValidatedSource(
+        SourceFile(
             file_name="Stores.csv",
             table_name="stores",
             dataframe=pd.DataFrame(

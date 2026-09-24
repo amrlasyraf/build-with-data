@@ -6,7 +6,19 @@ when you want to explore data quality, Power BI, or forecasting.
 
 ## 1. Check Data Quality
 
-**Status: implemented.** Run it after the core pipeline:
+**Status: implemented.** There are two optional commands. To check the three
+CSV files before loading Bronze, run:
+
+```powershell
+.\_local\.venv\Scripts\python.exe -m step_05_optional.data_quality.source_validation
+```
+
+This preflight command checks that the files exist, use UTF-8, have the
+expected headers, and contain data rows. It reports row and column counts.
+Bronze does not require this command; it reads the CSVs directly with pandas
+and stops if a load fails.
+
+After the core pipeline, run the table checks:
 
 ```powershell
 .\_local\.venv\Scripts\python.exe -m step_05_optional.data_quality.run_checks
@@ -14,8 +26,9 @@ when you want to explore data quality, Power BI, or forecasting.
 
 ### Purpose
 
-The core stages include required validation. This exercise adds a broader set
-of recorded checks after the pipeline has finished.
+The core stages stop on loading or transformation errors and check joins and
+row counts. The optional table checks add a broader set of recorded checks
+after the pipeline has finished.
 
 ### Checks included
 

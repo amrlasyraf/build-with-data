@@ -5,12 +5,11 @@ import logging
 
 import duckdb
 
-from step_02_bronze.bronze import load_bronze_tables
+from step_02_bronze.bronze import load_bronze_tables, read_sources
 from step_03_silver.silver import build_silver
 from step_04_gold.gold import build_gold
 from support.pipeline.database import prepare_database
 from support.pipeline.settings import DATASET_DIR, DATABASE_PATH
-from step_02_bronze.source_validation import validate_sources
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -26,14 +25,14 @@ def main(argv: list[str] | None = None) -> int:
         logging.info("%s started", stage)
         try:
             if stage == "bronze":
-                sources = validate_sources(DATASET_DIR)
+                sources = read_sources(DATASET_DIR)
                 prepare_database(DATABASE_PATH)
                 counts = load_bronze_tables(DATABASE_PATH, sources)
             elif stage == "silver":
                 counts = {"sales_enriched": build_silver(DATABASE_PATH)}
             else:
                 counts = {"monthly_sales_summary": build_gold(DATABASE_PATH)}
-        except (duckdb.Error, ValueError, OSError, RuntimeError) as error:
+        except (duckdb.Error, ValueError, OSError, RuntimeError, KeyError) as error:
             logging.error("%s failed: %s", stage, error)
             logging.error("Stopped. Completed upstream stages stay committed. Fix the error and retry with --layer %s.", stage)
             return 1

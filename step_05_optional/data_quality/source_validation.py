@@ -1,11 +1,11 @@
-"""Validate the CSV inputs before the pipeline creates database tables."""
+"""Optional preflight checks for the three source CSV files."""
 
 from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
 
-from support.pipeline.settings import BRONZE_COLUMN_NAMES, BRONZE_TABLE_NAMES, SOURCE_COLUMNS
+from support.pipeline.settings import DATASET_DIR, SOURCE_COLUMNS
 
 
 class SourceValidationError(ValueError):
@@ -13,25 +13,16 @@ class SourceValidationError(ValueError):
 
 
 @dataclass
-class ValidatedSource:
-    """A validated source ready to load into its Bronze table."""
-
+class SourceSummary:
+    """The row and column counts of a checked CSV file."""
     file_name: str
-    table_name: str
-    dataframe: pd.DataFrame
-
-    @property
-    def row_count(self) -> int:
-        return len(self.dataframe)
-
-    @property
-    def column_count(self) -> int:
-        return len(self.dataframe.columns)
+    row_count: int
+    column_count: int
 
 
-def validate_sources(dataset_dir: Path) -> list[ValidatedSource]:
-    """Read and validate the UTF-8 files needed by the core pipeline."""
-    validated_sources: list[ValidatedSource] = []
+def validate_sources(dataset_dir: Path) -> list[SourceSummary]:
+    """Report file, encoding, header, and empty-file problems before Bronze."""
+    checked_sources: list[SourceSummary] = []
 
     for file_name, expected_columns in SOURCE_COLUMNS.items():
         file_path = dataset_dir / file_name
@@ -50,7 +41,7 @@ def validate_sources(dataset_dir: Path) -> list[ValidatedSource]:
             raise SourceValidationError(
                 f"{file_name} is not valid UTF-8"
             ) from error
-        except (OSError, pd.errors.ParserError) as error:
+        except (OSError, pd.errors.ParserError, pd.errors.EmptyDataError) as error:
             raise SourceValidationError(
                 f"could not read {file_name}: {error}"
             ) from error
@@ -80,14 +71,27 @@ def validate_sources(dataset_dir: Path) -> list[ValidatedSource]:
         if dataframe.empty:
             raise SourceValidationError(f"{file_name} contains no data rows")
 
-        dataframe.columns = BRONZE_COLUMN_NAMES[file_name]
-
-        validated_sources.append(
-            ValidatedSource(
+        checked_sources.append(
+            SourceSummary(
                 file_name=file_name,
-                table_name=BRONZE_TABLE_NAMES[file_name],
-                dataframe=dataframe,
+                row_count=len(dataframe),
+                column_count=len(dataframe.columns),
             )
         )
 
-    return validated_sources
+    return checked_sources
+
+
+def main() -> int:
+    try:
+        summaries = validate_sources(DATASET_DIR)
+    except SourceValidationError as error:
+        print(f"Source check failed: {error}")
+        return 1
+    for summary in summaries:
+        print(f"{summary.file_name}: {summary.row_count:,} rows, {summary.column_count} columns")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

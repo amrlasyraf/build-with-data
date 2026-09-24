@@ -4,21 +4,21 @@ Gold groups Silver sales lines by month, product category, and sales channel.
 Its output, `gold.monthly_sales_summary`, is the table used for analysis and
 the optional Power BI report.
 
-Read `gold.sql` to see the grouping and sums. Read `gold.py` to see how Gold
-runs in its own transaction. A Gold retry does not reload the CSVs or rebuild
-Bronze and Silver.
+Read `gold.py` to see the pandas monthly grouping and sums, followed by the
+transaction that saves Gold in DuckDB. A Gold retry does not reload the CSVs
+or rebuild Bronze and Silver.
 
-Gold reads the committed Silver table, so run Silver first. Then run Gold from
-the repository root:
-
-```powershell
-.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer gold
-```
+Gold reads the committed Silver table, so run Silver first. Then open
+`step_04_gold/gold.py` in VS Code and click **Run Python File**. The output
+should show 979 rows in `gold.monthly_sales_summary`.
 
 Gross profit is **estimated** from standard product prices and costs. The
 source does not supply discounts, refunds, tax, or final accounting profit.
 
-Reopen the viewer with `-m support.viewer` and inspect the monthly result:
+To inspect the monthly result, open `support/viewer.py` in VS Code and click
+**Run Python File** again.
+
+Then run this query in the viewer:
 
 ```sql
 SELECT sales_month, product_category, sales_channel,

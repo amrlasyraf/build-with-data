@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from step_02_bronze.source_validation import SourceValidationError, validate_sources
+from step_05_optional.data_quality.source_validation import SourceValidationError, validate_sources
 
 
 VALID_FILES = {
@@ -62,4 +62,29 @@ def test_validate_sources_rejects_an_unexpected_header(tmp_path: Path) -> None:
     write_sources(tmp_path, changed_files)
 
     with pytest.raises(SourceValidationError, match="unexpected header"):
+        validate_sources(tmp_path)
+
+
+def test_validate_sources_rejects_a_file_with_no_data_rows(tmp_path: Path) -> None:
+    changed_files = dict(VALID_FILES)
+    changed_files["Sales.csv"] = VALID_FILES["Sales.csv"].splitlines()[0] + "\n"
+    write_sources(tmp_path, changed_files)
+
+    with pytest.raises(SourceValidationError, match="contains no data rows"):
+        validate_sources(tmp_path)
+
+
+def test_validate_sources_rejects_invalid_utf8(tmp_path: Path) -> None:
+    write_sources(tmp_path)
+    (tmp_path / "Sales.csv").write_bytes(b"\xff")
+
+    with pytest.raises(SourceValidationError, match="not valid UTF-8"):
+        validate_sources(tmp_path)
+
+
+def test_validate_sources_rejects_a_zero_byte_file(tmp_path: Path) -> None:
+    write_sources(tmp_path)
+    (tmp_path / "Sales.csv").write_bytes(b"")
+
+    with pytest.raises(SourceValidationError, match="could not read Sales.csv"):
         validate_sources(tmp_path)

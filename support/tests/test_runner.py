@@ -15,7 +15,7 @@ def test_gold_command_does_not_run_upstream(monkeypatch, tmp_path):
     monkeypatch.setattr(runner, "DATABASE_PATH", path)
     def unexpected(*args):
         raise AssertionError("Gold must not touch upstream stages")
-    monkeypatch.setattr(runner, "validate_sources", unexpected)
+    monkeypatch.setattr(runner, "read_sources", unexpected)
     monkeypatch.setattr(runner, "prepare_database", unexpected)
     monkeypatch.setattr(runner, "build_silver", unexpected)
     # Fail Gold deliberately to also verify the process-level failure contract.
@@ -25,7 +25,7 @@ def test_gold_command_does_not_run_upstream(monkeypatch, tmp_path):
 
 def test_all_stops_after_silver_failure(monkeypatch):
     calls = []
-    monkeypatch.setattr(runner, "validate_sources", lambda path: [])
+    monkeypatch.setattr(runner, "read_sources", lambda path: [])
     monkeypatch.setattr(runner, "prepare_database", lambda path: None)
     monkeypatch.setattr(runner, "load_bronze_tables", lambda *args: calls.append("bronze") or {})
     def fail(path):

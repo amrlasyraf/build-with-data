@@ -17,7 +17,7 @@ tables use the `bronze`, `silver`, and `gold` schemas in one DuckDB file.
 ## Bronze Contracts
 
 Bronze keeps the source fields recognizable. Source values, including dates and
-numbers, are loaded as text so Silver can handle their types explicitly.
+numbers, are loaded as text so pandas can handle their types in Silver.
 
 ### `bronze.sales`
 
@@ -85,8 +85,8 @@ All columns below are typed and analytics-ready.
 | `brand` | `text` | From products |
 | `product_subcategory` | `text` | From products |
 | `product_category` | `text` | From products |
-| `unit_cost_usd` | `numeric(12,2)` | Strip `$`, commas, and whitespace, then cast |
-| `unit_price_usd` | `numeric(12,2)` | Strip `$`, commas, and whitespace, then cast |
+| `unit_cost_usd` | `numeric(12,2)` | Pandas removes `$`, commas, and whitespace and calculates with decimal values |
+| `unit_price_usd` | `numeric(12,2)` | Pandas removes `$`, commas, and whitespace and calculates with decimal values |
 | `store_country` | `text` | From stores |
 | `store_state` | `text` | From stores |
 | `sales_channel` | `text` | `Online` for store `0`, otherwise `In Store` |

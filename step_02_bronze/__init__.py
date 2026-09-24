@@ -1,1 +1,1 @@
-"""Step 2: validate and load the source CSV files."""
+"""Step 2: load the source CSV files into Bronze."""

@@ -1,7 +1,8 @@
 # 00 — Set up your computer
 
-This step covers the local Python setup. After installing the packages, the
-next guides show how to run Bronze, Silver, and Gold from a terminal.
+This step covers the local Python setup. The setup commands below use a
+terminal once. After that, open each layer's Python file in VS Code and click
+**Run Python File**. You do not need to type a command to run a layer.
 
 ## What you need
 
@@ -10,8 +11,8 @@ next guides show how to run Bronze, Silver, and Gold from a terminal.
 | [Python 3.11 or newer](https://www.python.org/downloads/) | Yes | Runs the pipeline and creates its virtual environment |
 | PowerShell on Windows | Yes for these copy-and-paste commands | Runs the commands below |
 | Internet connection on first setup | Yes | Downloads Python packages |
-| [VS Code](https://code.visualstudio.com/Download) | Recommended | Makes it easier to browse the folders, edit code, and open a terminal |
-| [Python extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) | Recommended with VS Code | Adds Python editing and interpreter support; it does not install Python |
+| [VS Code](https://code.visualstudio.com/Download) | Yes for the click-to-run path | Opens and runs each layer's Python file |
+| [Python extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) | Yes with VS Code | Adds the Run Python File button; it does not install Python |
 | Git | No | You can use GitHub's **Download ZIP** instead |
 | Power BI Desktop | No | Needed only for the optional report in Step 05 |
 
@@ -54,8 +55,17 @@ python -m venv _local\.venv
 .\_local\.venv\Scripts\python.exe -c "import pandas, duckdb; print('Ready')"
 ```
 
+7. In VS Code, press **Ctrl+Shift+P**, choose **Python: Select Interpreter**,
+   and select `_local\.venv\Scripts\python.exe`. If it is not listed, choose
+   **Enter interpreter path** and browse to that file in the project folder.
+   Check that VS Code shows this environment as the selected Python version.
+
+To run a layer later, open its `.py` file and click **Run Python File** (the
+play button at the top right of the editor). VS Code displays the program's
+output in its terminal panel; you do not need to type a command there.
+
 `_local/` is ignored by Git. Your environment and generated database stay on
 your computer; they are not included in the repository.
 
 Next: [01 — Source data](../step_01_data/README.md). After looking at the CSVs,
-run Bronze using the command in [Step 02](../step_02_bronze/README.md).
+open `step_02_bronze/bronze.py` and follow [Step 02](../step_02_bronze/README.md).

@@ -7,7 +7,7 @@ import duckdb
 
 def require_tables(database_path: Path, tables: list[str], upstream: str) -> None:
     if not database_path.is_file():
-        raise ValueError(f"Database not found: {database_path}. Run --layer bronze first.")
+        raise ValueError(f"Database not found: {database_path}. Run bronze.py first.")
     with duckdb.connect(str(database_path), read_only=True) as connection:
         available = {
             f"{schema}.{table}"
@@ -17,4 +17,4 @@ def require_tables(database_path: Path, tables: list[str], upstream: str) -> Non
         }
     missing = [table for table in tables if table not in available]
     if missing:
-        raise ValueError(f"Missing upstream tables: {', '.join(missing)}. Run --layer {upstream} first.")
+        raise ValueError(f"Missing upstream tables: {', '.join(missing)}. Run {upstream}.py first.")

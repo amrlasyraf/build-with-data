@@ -529,9 +529,9 @@
         <p class="eyebrow">Local retail data project</p>
         <h1>A retail pipeline you can run and inspect.</h1>
         <p class="hero-copy">
-          Start with three CSV files. Run Bronze, Silver, and Gold locally,
-          then query the result in DuckDB. The optional Power BI report uses
-          the same Gold output.
+          Start with three CSV files. Pandas prepares Bronze, Silver, and Gold;
+          DuckDB stores each layer for local queries. The optional Power BI
+          report uses the same Gold output.
         </p>
         <div class="actions">
           <a class="button primary" href="https://github.com/amrlasyraf/build-with-data">Open the repository</a>
@@ -575,7 +575,7 @@
         <div class="flow-check">
           <span class="step-number">05 / OPTIONAL</span>
           <strong>Data quality</strong>
-          <small>14 extra checks, run after Gold</small>
+          <small>CSV preflight + table checks</small>
         </div>
         <ol class="flow" aria-label="Core project steps">
           <li>
@@ -628,7 +628,7 @@
         <p><a href="https://github.com/amrlasyraf/build-with-data#follow-the-folders-in-order">Open the numbered folder guide on GitHub</a>.</p>
 
         <div class="quality-line">
-          <span><strong>Optional deeper check:</strong> 14 rules across Bronze, Silver, and Gold, run after the pipeline.</span>
+          <span><strong>Optional data quality:</strong> CSV checks before Bronze and 14 table rules after Gold.</span>
           <span>Latest validation: 14 / 14 passed</span>
         </div>
       </div>
@@ -703,20 +703,16 @@
           <p class="eyebrow">Run it locally</p>
           <h2>Run the pipeline locally</h2>
           <ol class="steps">
-            <li>Install Python 3.11 or newer; VS Code is recommended, not required.</li>
-            <li>Download and extract the repository, then open a PowerShell terminal in its folder.</li>
-            <li>Create a virtual environment and install the packages.</li>
-            <li>Run Bronze, Silver, and Gold as three separate commands.</li>
-            <li>Inspect each layer with the DuckDB viewer as you go.</li>
+            <li>Install Python 3.11 or newer, VS Code, and its Python extension.</li>
+            <li>Download and extract the repository, then open its folder in VS Code.</li>
+            <li>Use the terminal once to create an environment and install the packages; select that interpreter in VS Code.</li>
+            <li>Open <code>bronze.py</code>, <code>silver.py</code>, then <code>gold.py</code>. Click Run Python File in each one.</li>
+            <li>Open <code>support/viewer.py</code> and click Run Python File to inspect each layer.</li>
           </ol>
         </div>
-        <pre aria-label="Manual PowerShell setup and pipeline commands"><code>python --version
+        <pre aria-label="One-time PowerShell setup commands"><code>python --version
 python -m venv _local\.venv
-.\_local\.venv\Scripts\python.exe -m pip install -r step_00_setup\requirements.txt
-.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer bronze
-.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer silver
-.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer gold
-.\_local\.venv\Scripts\python.exe -m support.viewer</code></pre>
+.\_local\.venv\Scripts\python.exe -m pip install -r step_00_setup\requirements.txt</code></pre>
       </div>
     </section>
 

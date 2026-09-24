@@ -1,14 +1,48 @@
-"""Load validated source data into source-shaped Bronze tables."""
+"""Read the three CSVs with pandas and store source-shaped Bronze tables."""
 
+from dataclasses import dataclass
 from pathlib import Path
+import sys
+
+# VS Code's Run button starts this file directly, outside the project package.
+if __name__ == "__main__" and not __package__:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import duckdb
+import pandas as pd
 
-from step_02_bronze.source_validation import ValidatedSource
+from support.pipeline.settings import BRONZE_COLUMN_NAMES, BRONZE_TABLE_NAMES, SOURCE_COLUMNS
+from support.pipeline.database import prepare_database
+from support.pipeline.settings import DATASET_DIR, DATABASE_PATH
+
+
+@dataclass
+class SourceFile:
+    file_name: str
+    table_name: str
+    dataframe: pd.DataFrame
+
+    @property
+    def row_count(self) -> int:
+        return len(self.dataframe)
+
+
+def read_sources(dataset_dir: Path) -> list[SourceFile]:
+    """Read source files; detailed preflight checks are an optional exercise."""
+    sources = []
+    for file_name in SOURCE_COLUMNS:
+        frame = pd.read_csv(
+            dataset_dir / file_name, encoding="utf-8", dtype=str, keep_default_na=False
+        )
+        # Keep only the fields Bronze uses, in the documented order.
+        frame = frame.rename(columns=dict(zip(SOURCE_COLUMNS[file_name], BRONZE_COLUMN_NAMES[file_name])))
+        frame = frame[BRONZE_COLUMN_NAMES[file_name]]
+        sources.append(SourceFile(file_name, BRONZE_TABLE_NAMES[file_name], frame))
+    return sources
 
 
 def load_bronze_tables(
-    database_path: Path, sources: list[ValidatedSource]
+    database_path: Path, sources: list[SourceFile]
 ) -> dict[str, int]:
     """Replace all Bronze tables in one transaction and return row counts."""
     loaded_rows: dict[str, int] = {}
@@ -55,3 +89,22 @@ def load_bronze_tables(
             raise
 
     return loaded_rows
+
+
+def main() -> int:
+    """Load Bronze when this file is run from VS Code."""
+    try:
+        sources = read_sources(DATASET_DIR)
+        prepare_database(DATABASE_PATH)
+        counts = load_bronze_tables(DATABASE_PATH, sources)
+    except (duckdb.Error, ValueError, OSError, RuntimeError, KeyError) as error:
+        print(f"Bronze failed: {error}")
+        return 1
+    for table, count in counts.items():
+        print(f"Bronze {table}: {count:,} rows")
+    print(f"Bronze complete. Database: {DATABASE_PATH}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

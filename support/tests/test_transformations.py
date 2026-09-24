@@ -5,9 +5,8 @@ import duckdb
 import pandas as pd
 import pytest
 
-from step_02_bronze.bronze import load_bronze_tables
+from step_02_bronze.bronze import SourceFile, load_bronze_tables
 from support.pipeline.database import prepare_database
-from step_02_bronze.source_validation import ValidatedSource
 from step_03_silver.silver import build_silver
 from step_04_gold.gold import build_gold
 
@@ -16,19 +15,19 @@ def test_transformations_calculate_and_preserve_outputs_on_failure(tmp_path):
     path = tmp_path / "test.duckdb"
     prepare_database(path)
     sources = [
-        ValidatedSource("Sales.csv", "sales", pd.DataFrame({
+        SourceFile("Sales.csv", "sales", pd.DataFrame({
             "order_number": ["1", "2"], "line_item": ["1", "1"],
             "order_date": ["1/31/2024", "2/1/2024"],
             "delivery_date": ["", "2/3/2024"], "customer_key": ["1", "1"],
             "store_key": ["1", "0"], "product_key": ["1", "1"],
             "quantity": ["2", "3"], "currency_code": ["USD", "CAD"],
         })),
-        ValidatedSource("Products.csv", "products", pd.DataFrame({
+        SourceFile("Products.csv", "products", pd.DataFrame({
             "product_key": ["1"], "product_name": ["Example"], "brand": ["Test"],
             "subcategory": ["Test"], "category": ["Audio"],
             "unit_cost_usd": [" $1,000.10 "], "unit_price_usd": [" $1,200.25 "],
         })),
-        ValidatedSource("Stores.csv", "stores", pd.DataFrame({
+        SourceFile("Stores.csv", "stores", pd.DataFrame({
             "store_key": ["0", "1"], "country": ["Online", "US"],
             "state": ["Online", "Example"],
         })),
@@ -52,7 +51,7 @@ def test_transformations_calculate_and_preserve_outputs_on_failure(tmp_path):
         assert con.execute(query).fetchall() == expected
         assert con.execute("SELECT product_key FROM silver.sales_enriched WHERE order_number = 1").fetchone() == (1,)
         con.execute("UPDATE bronze.sales SET order_date = 'invalid'")
-    with pytest.raises(duckdb.Error):
+    with pytest.raises(ValueError, match="sales date"):
         build_silver(path)
     with duckdb.connect(str(path)) as con:
         assert con.execute(query).fetchall() == expected
@@ -92,9 +91,9 @@ def test_gold_failure_and_retry_do_not_change_silver(tmp_path):
 
 def test_missing_dependencies_do_not_create_database(tmp_path):
     path = tmp_path / "missing.duckdb"
-    with pytest.raises(ValueError, match="Run --layer bronze"):
+    with pytest.raises(ValueError, match="Run bronze.py first"):
         build_gold(path)
     assert not path.exists()
     prepare_database(path)
-    with pytest.raises(ValueError, match="Run --layer silver"):
+    with pytest.raises(ValueError, match="Run silver.py first"):
         build_gold(path)

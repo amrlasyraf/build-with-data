@@ -1,5 +1,12 @@
 """Open DuckDB's local UI with the pipeline database attached read-only."""
 
+from pathlib import Path
+import sys
+
+# VS Code's Run button starts this file directly, outside the project package.
+if __name__ == "__main__" and not __package__:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import duckdb
 
 from support.pipeline.settings import DATABASE_PATH, OUTPUT_DIR

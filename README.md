@@ -2,8 +2,9 @@
 
 This project follows a retail dataset through Bronze, Silver, and Gold. It
 starts with three CSV files and ends with a monthly sales summary to query.
-Everything runs locally with Python, pandas, DuckDB, and SQL. No API key,
-cloud account, database server, or Docker is needed.
+Pandas reads, cleans, joins, and summarizes the data. DuckDB stores the three
+layers in one local file and lets you inspect them with SQL. No API key, cloud
+account, database server, or Docker is needed.
 
 ```text
 CSV files → Bronze → Silver → Gold → analysis
@@ -15,8 +16,9 @@ shows where the optional Power BI report fits.
 
 ## Follow the folders in order
 
-Each numbered folder has a short README and the files for that step. The
-commands are run from a terminal after downloading the repository.
+Each numbered folder has a short README and the files for that step. After
+one-time setup, open each layer's Python file in VS Code and click **Run Python
+File**. The layer guides show the exact file to open.
 
 | Step | Folder | Your task |
 |---|---|---|
@@ -25,7 +27,7 @@ commands are run from a terminal after downloading the repository.
 | 02 | [Bronze](step_02_bronze/README.md) | Run the source load |
 | 03 | [Silver](step_03_silver/README.md) | Run the cleaning and joins |
 | 04 | [Gold](step_04_gold/README.md) | Run the monthly aggregation |
-| 05 | [Optional](step_05_optional/README.md) | Try deeper data quality, Power BI, or forecasting |
+| 05 | [Optional](step_05_optional/README.md) | Try source and table checks, Power BI, or forecasting |
 
 The core pipeline ends after Step 04. Data inspection is included with each
 layer rather than listed as a separate step. `support/` holds the viewer,
@@ -35,16 +37,17 @@ files out of Git.
 
 ## 00 — Prepare your computer
 
-These instructions use Windows PowerShell. Start with the
+These one-time setup instructions use Windows PowerShell. Start with the
 [detailed setup guide](step_00_setup/README.md) if a terminal or virtual
-environment is new to you.
+environment is new to you. Running Bronze, Silver, and Gold afterward uses
+VS Code's Run button, not typed commands.
 
 | Prerequisite | Required? | Why |
 |---|---|---|
 | [Python 3.11 or newer](https://www.python.org/downloads/) | Yes | Runs the project |
 | Internet connection for first setup | Yes | Downloads the Python packages |
-| [VS Code](https://code.visualstudio.com/Download) | Recommended | Helps you browse files and use a terminal |
-| [VS Code Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) | Recommended with VS Code | Helps with Python editing; it does not install Python |
+| [VS Code](https://code.visualstudio.com/Download) | Yes for the click-to-run path | Opens and runs the Python files |
+| [VS Code Python extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) | Yes with VS Code | Adds the Run Python File button; it does not install Python |
 | Git | No | Download ZIP works instead |
 | Power BI Desktop | No | Only needed for the optional report |
 
@@ -64,6 +67,11 @@ try `py -3 --version` and use `py -3` for the environment-creation command.
 If neither works, install Python and reopen the terminal. The first package
 installation needs internet access. DuckDB installs as a Python package; no
 separate database server is needed.
+
+In VS Code, press **Ctrl+Shift+P**, select **Python: Select Interpreter**, and
+choose `_local\.venv\Scripts\python.exe`. If it is not listed, choose **Enter
+interpreter path** and browse to it. Do this once before clicking Run on any
+project script.
 
 `_local/` holds the environment and generated files. Git ignores this folder,
 so it is not part of the public download. Back up personal work saved there
@@ -88,45 +96,36 @@ it is documentation, not a fourth pipeline input.
 
 Bronze stores source-shaped tables. Values such as dates and prices remain
 text so you can compare the original files with their later cleaned versions.
-Run the first stage from the repository root:
-
-```powershell
-.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer bronze
-```
+Pandas reads the CSVs directly. An optional preflight check for file presence,
+headers, UTF-8, and empty sources is in [Step 05](step_05_optional/README.md).
+In VS Code, open `step_02_bronze/bronze.py` and click **Run Python File** at the
+top right of the editor.
 
 Expected: 62,884 sales rows, 2,517 products, and 67 stores. The command
 creates `_local/output/retail_pipeline.duckdb`.
 
-To inspect Bronze, start the viewer, run a query from the
-[Bronze guide](step_02_bronze/README.md), then stop the viewer before running
-Silver:
-
-```powershell
-.\_local\.venv\Scripts\python.exe -m support.viewer
-```
+To inspect Bronze, open `support/viewer.py` in VS Code and click **Run Python
+File**. Try the query in the [Bronze guide](step_02_bronze/README.md), then
+stop the viewer before running Silver.
 
 ## 03 — Build Silver
 
-Silver converts dates and numbers, joins sales to products and stores, and
+Pandas converts dates and numbers, joins sales to products and stores, and
 calculates line-level sales and estimated gross profit. It needs Bronze to
 have succeeded first.
 
-```powershell
-.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer silver
-```
+Open `step_03_silver/silver.py` in VS Code and click **Run Python File**.
 
 Expected: 62,884 rows in `silver.sales_enriched`. Read
-`step_03_silver/silver.sql` to see the cleaning and joins. Reopen the viewer
+`step_03_silver/silver.py` to see the cleaning and joins. Reopen the viewer
 and compare Bronze and Silver using the [Silver guide](step_03_silver/README.md).
 
 ## 04 — Build Gold
 
-Gold groups Silver sales by month, product category, and sales channel. It
+Pandas groups Silver sales by month, product category, and sales channel. It
 needs Silver to have succeeded first.
 
-```powershell
-.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer gold
-```
+Open `step_04_gold/gold.py` in VS Code and click **Run Python File**.
 
 Expected: 979 rows in `gold.monthly_sales_summary`. The measures are based on
 standard product prices and costs:
@@ -144,18 +143,15 @@ Reopen the viewer and answer the project question with the query in the
 another pipeline step.
 
 Each stage replaces only its own table in a transaction. If Gold fails, you
-can retry the Gold command without reloading Bronze or rebuilding Silver. A
+can click Run on `gold.py` again without reloading Bronze or rebuilding Silver. A
 failed stage leaves its previous committed result available. After changing
 upstream data, rerun the affected downstream stages in order; this local
 pipeline does not update them automatically. Run only one writer at a time.
 
 ## Explore while you build
 
-Start the local DuckDB viewer:
-
-```powershell
-.\_local\.venv\Scripts\python.exe -m support.viewer
-```
+Open `support/viewer.py` in VS Code and click **Run Python File** to start the
+local DuckDB viewer.
 
 The first viewer run needs internet access for the DuckDB UI extension and
 browser assets. Queries run locally without an account. In the browser,
@@ -199,23 +195,24 @@ ORDER BY order_number, line_item
 LIMIT 10;
 ```
 
-Press Enter in the viewer's terminal to stop it before rerunning a pipeline
-stage. Closing only the browser tab does not release the database lock. If the
+Press Enter in the VS Code panel opened by Run Python File to stop the viewer
+before rerunning a pipeline stage. Closing only the browser tab does not release
+the database lock. If the
 browser does not open, visit `http://localhost:4213` while the viewer runs.
 
 ## 05 — Optional exercises
 
 The core pipeline is complete after Step 04. [Step 05](step_05_optional/README.md)
-explains deeper data-quality checks, the Power BI export/report, and a
+explains optional checks before Bronze and after Gold, the Power BI export/report, and a
 Silver-based forecasting experiment. None is required for Bronze, Silver, or
 Gold. PostgreSQL is not implemented.
 
 ## Reference
 
-The pipeline runner is `step_00_setup/run_pipeline.py`. Python controls each
-stage and its failures; SQL in the Silver and Gold folders handles joins and
-aggregation. [The data model](support/DATA_MODEL.md) lists columns, row grain,
-and join rules.
+The optional command-line runner is `step_00_setup/run_pipeline.py`. Each layer
+can also be run by clicking Run in its own file. Pandas handles the Silver and Gold transformations;
+DuckDB stores the results and runs the example inspection queries.
+[The data model](support/DATA_MODEL.md) lists columns, row grain, and join rules.
 
 The data comes from Maven Analytics' fictitious
 [Global Electronics Retailer dataset](https://mavenanalytics.io/data-playground/global-electronics-retailer).
