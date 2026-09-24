@@ -14,8 +14,8 @@ After completing Step 00, run Bronze from the repository root:
 .\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer bronze
 ```
 
-Inspect Bronze now with the local viewer. Run this from the repository root,
-then expand the `retail` database in the browser and try the query:
+To inspect Bronze, start the local viewer from the repository root. Then
+expand the `retail` database in the browser and try the query:
 
 ```powershell
 .\_local\.venv\Scripts\python.exe -m support.viewer

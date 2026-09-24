@@ -14,8 +14,8 @@ when you want to explore data quality, Power BI, or forecasting.
 
 ### Purpose
 
-Show how a pipeline can prove that its output is trustworthy, without mixing a
-large set of validation rules into the beginner walkthrough.
+The core stages include required validation. This exercise adds a broader set
+of recorded checks after the pipeline has finished.
 
 ### Checks included
 
@@ -58,9 +58,9 @@ unchanged.
 Show how an analytics tool consumes the Gold layer rather than rebuilding the
 pipeline logic inside a dashboard.
 
-### Beginner path
+### Connect the report
 
-1. Complete Steps 00–04 by running Bronze, Silver, and Gold yourself.
+1. Run Bronze, Silver, and Gold in Steps 00–04.
 2. Run the Gold CSV export command above.
 3. Open [the completed report](power_bi/sales-dashboard.pbix) in Power
    BI Desktop.

@@ -1,8 +1,7 @@
 # 00 — Set up your computer
 
-This is a hands-on project. Nothing runs just because you download it. You
-will create a Python environment, install the packages, and run Bronze, Silver,
-and Gold yourself from a terminal.
+This step covers the local Python setup. After installing the packages, the
+next guides show how to run Bronze, Silver, and Gold from a terminal.
 
 ## What you need
 
@@ -23,7 +22,7 @@ a DuckDB server.
 ## Prepare the project
 
 1. Download the project from GitHub with **Code → Download ZIP**, then extract
-   it. Do not work from inside the ZIP.
+   it. Use the extracted folder for the steps below.
 2. Open the extracted repository folder in VS Code, or open PowerShell in that
    folder. The terminal should show the folder containing `README.md`.
 3. Check that Python is available:

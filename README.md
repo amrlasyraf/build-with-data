@@ -1,9 +1,9 @@
 # Build With Me #1 — Local Retail Data Pipeline
 
-Build a retail data pipeline yourself, one layer at a time. You will read three
-CSV files, load Bronze, clean and join Silver, aggregate Gold, and query the
-result. The project runs locally with Python, pandas, DuckDB, and SQL—no API
-key, cloud account, database server, or Docker required.
+This project follows a retail dataset through Bronze, Silver, and Gold. It
+starts with three CSV files and ends with a monthly sales summary to query.
+Everything runs locally with Python, pandas, DuckDB, and SQL. No API key,
+cloud account, database server, or Docker is needed.
 
 ```text
 CSV files → Bronze → Silver → Gold → analysis
@@ -15,8 +15,8 @@ shows where the optional Power BI report fits.
 
 ## Follow the folders in order
 
-Each numbered folder has a short README and the files for that step. No step
-runs automatically when you download the repository.
+Each numbered folder has a short README and the files for that step. The
+commands are run from a terminal after downloading the repository.
 
 | Step | Folder | Your task |
 |---|---|---|
@@ -27,11 +27,11 @@ runs automatically when you download the repository.
 | 04 | [Gold](step_04_gold/README.md) | Run the monthly aggregation |
 | 05 | [Optional](step_05_optional/README.md) | Try deeper data quality, Power BI, or forecasting |
 
-You can stop after Step 04. Inspect the data while completing each layer; it is
-not a separate stage. `support/` holds the optional viewer, shared code, tests, and the data
-model for a deeper look. `docs/` contains the project website; neither is an
-extra step you must complete. The root `README.md` is GitHub's entry page, and
-`.gitignore` keeps generated files out of Git.
+The core pipeline ends after Step 04. Data inspection is included with each
+layer rather than listed as a separate step. `support/` holds the viewer,
+shared code, tests, and data model; `docs/` contains the project website.
+The root `README.md` is GitHub's entry page, and `.gitignore` keeps generated
+files out of Git.
 
 ## 00 — Prepare your computer
 
@@ -88,7 +88,7 @@ it is documentation, not a fourth pipeline input.
 
 Bronze stores source-shaped tables. Values such as dates and prices remain
 text so you can compare the original files with their later cleaned versions.
-Run the first stage yourself:
+Run the first stage from the repository root:
 
 ```powershell
 .\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer bronze
@@ -151,7 +151,7 @@ pipeline does not update them automatically. Run only one writer at a time.
 
 ## Explore while you build
 
-Start the local DuckDB viewer yourself:
+Start the local DuckDB viewer:
 
 ```powershell
 .\_local\.venv\Scripts\python.exe -m support.viewer

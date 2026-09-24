@@ -1,8 +1,7 @@
 # 01 — Source data
 
-Start here after [Step 00 — Setup](../step_00_setup/README.md). These CSV files
-are the input, not generated output. You do not need to edit them for the first
-run.
+After [Step 00 — Setup](../step_00_setup/README.md), take a look at the source
+CSVs. They can stay unchanged for the first pipeline run.
 
 | File | Look for |
 |---|---|

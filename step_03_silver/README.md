@@ -9,8 +9,8 @@ and checks around them. Sales are joined on `ProductKey` and `StoreKey`. Missing
 or duplicate product or store keys cause the stage to fail instead of silently
 losing or multiplying sales lines.
 
-Bronze must already be committed. Run only Silver from the repository
-root:
+Silver reads the committed Bronze tables, so run Bronze first. Then run Silver
+from the repository root:
 
 ```powershell
 .\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer silver

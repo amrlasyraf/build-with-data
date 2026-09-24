@@ -10,5 +10,5 @@ want to inspect the shared pieces used by several steps:
   optional exercises work as expected.
 - `DATA_MODEL.md` lists the tables, their row grain, columns, and join rules.
 
-You do not need to read this folder to run the project. For the guided path,
-start with [Step 00 — Setup](../step_00_setup/README.md).
+For the guided path, start with [Step 00 — Setup](../step_00_setup/README.md).
+These support files are available when you want to look further into the code.
