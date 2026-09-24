@@ -17,5 +17,7 @@ The `optional/` files are not loaded in this project. `Customers.csv` and
 
 `Data_Dictionary.csv` explains the source fields. It is a reference, not a
 fourth pipeline input.
+The [Data Guide](../support/DATA_MODEL.md) connects those fields to Bronze,
+Silver, and Gold with a flow diagram and a dictionary for each layer.
 
 Next: [02 — Bronze](../step_02_bronze/README.md).

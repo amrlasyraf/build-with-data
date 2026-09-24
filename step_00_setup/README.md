@@ -4,6 +4,11 @@ This step covers the local Python setup. The setup commands below use a
 terminal once. After that, open each layer's Python file in VS Code and click
 **Run Python File**. You do not need to type a command to run a layer.
 
+If a README opens in VS Code showing Markdown symbols such as `#` and `|`,
+press **Ctrl+Shift+V** to see the formatted preview. You can also right-click
+the file's tab and choose **Open Preview**. On GitHub, README files already
+appear formatted.
+
 ## What you need
 
 | Tool | Required? | Why |

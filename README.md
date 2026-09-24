@@ -13,6 +13,12 @@ CSV files → Bronze → Silver → Gold → analysis
 The question is: **How do sales and estimated gross profit change by month,
 product category, and sales channel?** The [visual project guide](https://amrlasyraf.github.io/build-with-data/)
 shows where the optional Power BI report fits.
+For the source fields, joins, measures, and a flow diagram, read the
+[Data Guide](support/DATA_MODEL.md).
+
+The `.md` files are reading guides. GitHub shows them as formatted pages. In
+VS Code, open a `.md` file and press **Ctrl+Shift+V** to see its formatted
+preview.
 
 ## Follow the folders in order
 
@@ -212,7 +218,8 @@ Gold. PostgreSQL is not implemented.
 The optional command-line runner is `step_00_setup/run_pipeline.py`. Each layer
 can also be run by clicking Run in its own file. Pandas handles the Silver and Gold transformations;
 DuckDB stores the results and runs the example inspection queries.
-[The data model](support/DATA_MODEL.md) lists columns, row grain, and join rules.
+[The Data Guide](support/DATA_MODEL.md) explains the flow, columns, row grain,
+joins, and measures.
 
 The data comes from Maven Analytics' fictitious
 [Global Electronics Retailer dataset](https://mavenanalytics.io/data-playground/global-electronics-retailer).
