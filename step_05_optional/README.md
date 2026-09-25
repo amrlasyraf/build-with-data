@@ -38,7 +38,7 @@ after the pipeline has finished.
 - `store_key` is unique in Bronze stores
 - every sales product key joins to a product
 - every sales store key joins to a store
-- quantity is greater than zero
+- quantity is a positive whole number
 - delivery date is not earlier than order date when present
 - online sales have a delivery date
 - Silver row count matches Bronze sales row count

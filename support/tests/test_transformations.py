@@ -9,6 +9,7 @@ from step_02_bronze.bronze import SourceFile, load_bronze_tables
 from support.pipeline.database import prepare_database
 from step_03_silver.silver import build_silver
 from step_04_gold.gold import build_gold
+from step_04_gold import gold as gold_stage
 
 
 def test_transformations_calculate_and_preserve_outputs_on_failure(tmp_path):
@@ -55,9 +56,22 @@ def test_transformations_calculate_and_preserve_outputs_on_failure(tmp_path):
         build_silver(path)
     with duckdb.connect(str(path)) as con:
         assert con.execute(query).fetchall() == expected
+        con.execute("UPDATE bronze.sales SET product_key = '1', order_date = '2/1/2024' WHERE order_number = '2'")
+        con.execute("UPDATE bronze.sales SET product_key = '1', order_date = '' WHERE order_number = '1'")
+    with pytest.raises(ValueError, match="order_date is required"):
+        build_silver(path)
+    with duckdb.connect(str(path)) as con:
+        assert con.execute(query).fetchall() == expected
+        assert con.execute("SELECT order_date FROM silver.sales_enriched WHERE order_number = 1").fetchone() == (date(2024, 1, 31),)
+        con.execute("UPDATE bronze.sales SET order_date = '1/31/2024' WHERE order_number = '1'")
+        con.execute("UPDATE bronze.products SET category = '' WHERE product_key = '1'")
+    with pytest.raises(ValueError, match="product_category is required"):
+        build_silver(path)
+    with duckdb.connect(str(path)) as con:
+        assert con.execute(query).fetchall() == expected
 
 
-def test_gold_failure_and_retry_do_not_change_silver(tmp_path):
+def test_gold_failure_and_retry_do_not_change_silver(tmp_path, monkeypatch):
     path = tmp_path / "retry.duckdb"
     prepare_database(path)
     with duckdb.connect(str(path)) as con:
@@ -71,6 +85,29 @@ def test_gold_failure_and_retry_do_not_change_silver(tmp_path):
     assert build_gold(path) == 1
     with duckdb.connect(str(path)) as con:
         old_gold = con.execute("SELECT * FROM gold.monthly_sales_summary").fetchall()
+        con.execute("UPDATE silver.sales_enriched SET order_date = NULL")
+    with pytest.raises(ValueError, match="order_date is required"):
+        build_gold(path)
+    with duckdb.connect(str(path)) as con:
+        assert con.execute("SELECT * FROM gold.monthly_sales_summary").fetchall() == old_gold
+        con.execute("UPDATE silver.sales_enriched SET order_date = DATE '2024-01-01'")
+        con.execute("UPDATE silver.sales_enriched SET product_category = ''")
+    with pytest.raises(ValueError, match="product_category is required"):
+        build_gold(path)
+    with duckdb.connect(str(path)) as con:
+        assert con.execute("SELECT * FROM gold.monthly_sales_summary").fetchall() == old_gold
+        con.execute("UPDATE silver.sales_enriched SET product_category = 'Audio'")
+    original_aggregate = gold_stage.aggregate_gold
+    with monkeypatch.context() as patch:
+        def wrong_count(sales):
+            summary = original_aggregate(sales)
+            summary["line_item_count"] = 0
+            return summary
+        patch.setattr(gold_stage, "aggregate_gold", wrong_count)
+        with pytest.raises(ValueError, match="do not reconcile"):
+            build_gold(path)
+    with duckdb.connect(str(path)) as con:
+        assert con.execute("SELECT * FROM gold.monthly_sales_summary").fetchall() == old_gold
         # A committed upstream value that cannot fit Gold's DECIMAL(16,2).
         con.execute("ALTER TABLE silver.sales_enriched ALTER gross_sales_usd TYPE DECIMAL(30,2)")
         con.execute("UPDATE silver.sales_enriched SET gross_sales_usd = 1000000000000000")

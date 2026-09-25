@@ -215,9 +215,17 @@ Gold. PostgreSQL is not implemented.
 
 ## Reference
 
-The optional command-line runner is `step_00_setup/run_pipeline.py`. Each layer
-can also be run by clicking Run in its own file. Pandas handles the Silver and Gold transformations;
-DuckDB stores the results and runs the example inspection queries.
+The optional command-line runner lets you select `bronze`, `silver`, `gold`, or
+`all`. From the project folder, after setup, run it as a Python module:
+
+```powershell
+.\_local\.venv\Scripts\python.exe -m step_00_setup.run_pipeline --layer all
+```
+
+Replace `all` with one layer name to run only that layer. The core learning
+path above uses VS Code's Run button in each layer's own file; the runner is
+not required. Pandas handles the Silver and Gold transformations; DuckDB
+stores the results and runs the example inspection queries.
 [The Data Guide](support/DATA_MODEL.md) explains the flow, columns, row grain,
 joins, and measures.
 

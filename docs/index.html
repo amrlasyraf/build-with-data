@@ -387,19 +387,20 @@
         <p class="flow-hint">Scroll sideways to see the full flow.</p>
         <div class="diagram-scroll" role="region" aria-label="Project data flow" tabindex="0">
           <div class="diagram">
-            <pre class="mermaid" aria-label="Sales, products, and stores flow through Bronze and Silver to Gold. Optional data quality sits between Bronze and Silver; forecasting branches from Silver and Power BI branches from Gold.">
+            <pre class="mermaid" aria-label="Sales, products, and stores flow through Bronze and Silver to Gold. Optional CSV preflight runs before Bronze, table checks after Gold, forecasting from Silver, and Power BI from Gold.">
 flowchart LR
     Sources["Sales, Products, Stores CSVs"] --> Bronze["Bronze: raw tables"]
     Bronze --> Silver["Silver: clean and join"]
     Silver --> Gold["Gold: monthly summary"]
-    Bronze -.-> DQ["Optional: data quality"]
-    DQ -.-> Silver
+    Sources -.-> Preflight["Optional: CSV preflight"]
+    Preflight -.-> Bronze
+    Gold -.-> TableDQ["Optional: table checks"]
     Silver -.-> Forecast["Optional: forecasting"]
     Gold -.-> PowerBI["Optional: Power BI"]
             </pre>
           </div>
         </div>
-        <p class="diagram-note">The dotted data-quality route is optional; the core pipeline runs directly from Bronze to Silver.</p>
+        <p class="diagram-note">CSV preflight runs before Bronze. Table checks need Bronze, Silver, and Gold, so run them after Gold. Both are optional.</p>
         <p><a href="https://github.com/amrlasyraf/build-with-data#follow-the-folders-in-order">Follow the numbered folder guide</a> or <a href="https://github.com/amrlasyraf/build-with-data/blob/main/support/DATA_MODEL.md">read the data guide and dictionary</a>.</p>
       </div>
     </section>
@@ -495,7 +496,7 @@ python -m venv _local\.venv
         <div class="optional-grid">
           <article class="optional-item">
             <h3>Data quality</h3>
-            <p>Check the source CSVs or examine Bronze, Silver, and Gold tables. These checks do not change the core pipeline.</p>
+            <p>Check the source CSVs before Bronze, or check all three pipeline layers after Gold. Neither check changes the core pipeline.</p>
           </article>
           <article class="optional-item">
             <h3>Power BI report</h3>

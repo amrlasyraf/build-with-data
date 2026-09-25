@@ -70,3 +70,15 @@ def test_quality_results_append_and_expose_latest_run(tmp_path):
             f"FROM {quality_schema}.latest_check_results"
         ).fetchall()
         assert latest_run_ids == [(second_run_id,)]
+
+
+def test_fractional_quantity_fails_positive_integer_check(tmp_path):
+    database_path = tmp_path / "fractional.duckdb"
+    create_valid_pipeline_tables(database_path)
+    with duckdb.connect(str(database_path)) as connection:
+        connection.execute("UPDATE bronze.sales SET quantity = '1.5'")
+
+    _, results = run_quality_checks(database_path)
+    quantity_check = next(result for result in results if result.name == "quantity_positive_integer")
+    assert quantity_check.status == "FAIL"
+    assert quantity_check.failed_rows == 1

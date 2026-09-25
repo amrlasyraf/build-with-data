@@ -59,6 +59,8 @@ def transform_silver(
         )
     except (TypeError, ValueError) as error:
         raise ValueError(f"A sales date could not be read: {error}") from error
+    if sales["order_date"].isna().any():
+        raise ValueError("order_date is required for every sales line")
 
     products["unit_cost_usd"] = as_money(products["unit_cost_usd"], "unit_cost_usd")
     products["unit_price_usd"] = as_money(products["unit_price_usd"], "unit_price_usd")
@@ -82,6 +84,9 @@ def transform_silver(
     if (enriched["_product_match"] != "both").any() or (enriched["_store_match"] != "both").any():
         raise ValueError("Product/store joins failed: a sales key has no match")
     enriched = enriched.drop(columns=["_product_match", "_store_match"])
+    category = enriched["product_category"]
+    if category.isna().any() or category.astype("string").str.strip().eq("").any():
+        raise ValueError("product_category is required for every sales line")
 
     enriched["sales_channel"] = enriched["store_key"].map(
         lambda key: "Online" if key == 0 else "In Store"

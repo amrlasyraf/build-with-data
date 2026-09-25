@@ -129,12 +129,19 @@ CHECKS = [
         "high",
         "Sales quantity is a positive integer.",
         """
+        WITH quantities AS (
+            SELECT quantity,
+                   try_cast(quantity AS DECIMAL(38,18)) AS number
+            FROM bronze.sales
+        )
         SELECT count(*) FILTER (
-                   WHERE try_cast(quantity AS INTEGER) IS NULL
-                      OR try_cast(quantity AS INTEGER) <= 0
+                   WHERE number IS NULL
+                      OR number <= 0
+                      OR number % 1 <> 0
+                      OR try_cast(quantity AS BIGINT) IS NULL
                )::BIGINT AS failed_rows,
                count(*)::BIGINT AS total_rows
-        FROM bronze.sales
+        FROM quantities
         """,
     ),
     QualityCheck(

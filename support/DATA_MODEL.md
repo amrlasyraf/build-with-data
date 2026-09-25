@@ -18,8 +18,9 @@ flowchart LR
     Sources["Sales, Products, Stores CSVs"] --> Bronze["Bronze: raw tables"]
     Bronze --> Silver["Silver: cleaned and joined sales lines"]
     Silver --> Gold["Gold: monthly sales summary"]
-    Bronze -.-> DQ["Optional: data quality"]
-    DQ -.-> Silver
+    Sources -.-> Preflight["Optional: CSV preflight"]
+    Preflight -.-> Bronze
+    Gold -.-> TableDQ["Optional: table checks"]
     Silver -.-> Forecast["Optional: forecasting"]
     Gold -.-> PowerBI["Optional: Power BI CSV"]
 ```
@@ -27,8 +28,8 @@ flowchart LR
 Solid arrows show the core pipeline. Dotted arrows are optional exercises.
 Pandas reads the CSVs, cleans and joins Bronze data into Silver, then groups
 Silver data into Gold. DuckDB stores the Bronze, Silver, and Gold tables in one
-local file. The data-quality route is optional; the core pipeline runs directly
-from Bronze to Silver.
+local file. The optional CSV preflight runs before Bronze; the optional table
+checks need all three layers and run after Gold.
 
 ## Source files
 

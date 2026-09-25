@@ -20,6 +20,12 @@ def aggregate_gold(sales: pd.DataFrame) -> pd.DataFrame:
         raise ValueError("Silver sales is empty. Run Silver first.")
     sales = sales.copy()
     sales["sales_month"] = pd.to_datetime(sales["order_date"]).dt.to_period("M").dt.to_timestamp()
+    if sales["sales_month"].isna().any():
+        raise ValueError("order_date is required for every Silver sales line")
+    for column in ("product_category", "sales_channel"):
+        values = sales[column]
+        if values.isna().any() or values.astype("string").str.strip().eq("").any():
+            raise ValueError(f"{column} is required for every Silver sales line")
     return sales.groupby(
         ["sales_month", "product_category", "sales_channel"],
         as_index=False,
@@ -66,6 +72,27 @@ def build_gold(database_path: Path) -> int:
             gold_count = connection.execute("SELECT count(*) FROM gold.monthly_sales_summary").fetchone()[0]
             if not gold_count or gold_count != len(summary):
                 raise ValueError("Gold summary row count does not match the pandas result")
+            reconciled = connection.execute("""
+                SELECT s.line_items = g.line_items
+                   AND s.units = g.units
+                   AND s.sales = g.sales
+                   AND s.profit = g.profit
+                FROM (
+                    SELECT count(*) AS line_items, sum(quantity) AS units,
+                           sum(gross_sales_usd) AS sales,
+                           sum(estimated_gross_profit_usd) AS profit
+                    FROM silver.sales_enriched
+                ) AS s
+                CROSS JOIN (
+                    SELECT sum(line_item_count) AS line_items,
+                           sum(units_sold) AS units,
+                           sum(gross_sales_usd) AS sales,
+                           sum(estimated_gross_profit_usd) AS profit
+                    FROM gold.monthly_sales_summary
+                ) AS g
+            """).fetchone()[0]
+            if not reconciled:
+                raise ValueError("Gold counts and totals do not reconcile to Silver")
             connection.execute("COMMIT")
         except Exception:
             connection.execute("ROLLBACK")
